@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nocturne — Arquitectura Sonora para Narradores</title>
+<meta name="description" content="173 sonidos. 22 categorías. Síntesis procedural pura. El estudio de diseño de ambientes sonoros para escritores, guionistas y narradores.">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0e0d0b; --bg2: #141310; --bg3: #1c1a17;
+  --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.13);
+  --text: #f0ead8; --text2: #9e9580; --text3: #5c5748;
+  --accent: #c8a96e; --accent2: #8a6f3e;
+  --font-d: 'DM Serif Display', Georgia, serif;
+  --font-m: 'DM Mono', 'Courier New', monospace;
+}
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: var(--bg); color: var(--text); font-family: var(--font-m); font-size: 13px; line-height: 1.6; }
+body::before {
+  content: ''; position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none; opacity: .5;
+}
+
+/* NAV */
+nav { display: flex; align-items: center; justify-content: space-between; padding: 18px 40px; border-bottom: 1px solid var(--border); position: sticky; top: 0; background: rgba(14,13,11,.92); backdrop-filter: blur(8px); z-index: 10; }
+.nav-logo { font-family: var(--font-d); font-size: 20px; color: var(--accent); }
+.nav-links { display: flex; gap: 6px; }
+.nav-link { padding: 5px 12px; border: 1px solid var(--border2); border-radius: 20px; color: var(--text2); font-size: 12px; text-decoration: none; transition: all .12s; }
+.nav-link:hover { background: var(--bg3); color: var(--text); }
+.nav-link.cta { background: var(--accent2); border-color: var(--accent); color: var(--accent); font-weight: 500; }
+.nav-link.cta:hover { background: rgba(200,169,110,.25); }
+
+/* HERO */
+.hero { max-width: 760px; margin: 0 auto; padding: 90px 40px 60px; text-align: center; position: relative; }
+.hero-eyebrow { font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--text3); margin-bottom: 20px; }
+.hero-title { font-family: var(--font-d); font-size: clamp(42px, 8vw, 72px); color: var(--text); line-height: 1.05; letter-spacing: -.02em; margin-bottom: 18px; }
+.hero-title em { color: var(--accent); font-style: italic; }
+.hero-sub { font-size: 15px; color: var(--text2); line-height: 1.7; max-width: 520px; margin: 0 auto 36px; font-weight: 300; }
+.hero-cta { display: inline-flex; align-items: center; gap: 8px; padding: 12px 28px; background: var(--accent2); border: 1px solid var(--accent); border-radius: 6px; color: var(--accent); font-family: var(--font-m); font-size: 13px; font-weight: 500; text-decoration: none; transition: all .15s; margin-right: 10px; }
+.hero-cta:hover { background: rgba(200,169,110,.22); }
+.hero-cta.secondary { background: transparent; border-color: var(--border2); color: var(--text2); }
+.hero-cta.secondary:hover { background: var(--bg3); color: var(--text); }
+
+/* STATS */
+.stats { display: flex; justify-content: center; gap: 0; margin: 60px auto; max-width: 700px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.stat { flex: 1; padding: 24px 20px; text-align: center; border-right: 1px solid var(--border); }
+.stat:last-child { border-right: none; }
+.stat-num { font-family: var(--font-d); font-size: 36px; color: var(--accent); line-height: 1; margin-bottom: 5px; }
+.stat-label { font-size: 11px; color: var(--text3); letter-spacing: .07em; text-transform: uppercase; }
+
+/* FEATURES */
+.features { max-width: 900px; margin: 0 auto; padding: 20px 40px 80px; }
+.section-title { font-family: var(--font-d); font-size: 28px; color: var(--text); text-align: center; margin-bottom: 40px; }
+.features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
+.feature-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+.feature-icon { font-size: 22px; margin-bottom: 10px; }
+.feature-title { font-size: 13px; font-weight: 500; color: var(--text); margin-bottom: 6px; }
+.feature-desc { font-size: 11px; color: var(--text3); line-height: 1.7; }
+
+/* CATEGORIES */
+.categories { max-width: 900px; margin: 0 auto; padding: 0 40px 80px; }
+.cats-grid { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 32px; }
+.cat-pill { padding: 5px 14px; border: 1px solid var(--border); border-radius: 20px; font-size: 11px; color: var(--text2); }
+
+/* PHILOSOPHY */
+.philosophy { border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 70px 40px; text-align: center; margin: 0 0 80px; }
+.philosophy blockquote { font-family: var(--font-d); font-size: clamp(18px,3vw,26px); color: var(--text2); font-style: italic; max-width: 600px; margin: 0 auto 16px; line-height: 1.5; }
+.philosophy cite { font-size: 11px; color: var(--text3); letter-spacing: .08em; }
+
+/* INSTALL */
+.install { max-width: 680px; margin: 0 auto 90px; padding: 0 40px; text-align: center; }
+.code-block { background: var(--bg2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; text-align: left; font-size: 12px; color: var(--text2); margin: 24px 0; line-height: 2; }
+.code-block span { color: var(--accent2); }
+
+/* FOOTER */
+footer { border-top: 1px solid var(--border); padding: 24px 40px; display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: var(--text3); }
+footer a { color: var(--text3); text-decoration: none; }
+footer a:hover { color: var(--text2); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Nocturne</div>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Características</a>
+    <a href="https://github.com/ivanroig/nocturne" class="nav-link">GitHub</a>
+    <a href="index.html" class="nav-link cta">Abrir estudio →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-eyebrow">Síntesis procedural · Sin archivos de audio · Sin servidor</div>
+  <h1 class="hero-title">Arquitectura sonora<br>para <em>narradores</em></h1>
+  <p class="hero-sub">No es un reproductor de ruido blanco. Es un estudio de diseño de ambientes — capas independientes con volumen, ritmo y corrupción propios. Del ronroneo de un gato al llamado de Cthulhu.</p>
+  <a href="index.html" class="hero-cta">Abrir Nocturne Studio</a>
+  <a href="https://github.com/ivanroig/nocturne" class="hero-cta secondary">Ver en GitHub</a>
+</section>
+
+<div class="stats">
+  <div class="stat"><div class="stat-num">173</div><div class="stat-label">Sonidos</div></div>
+  <div class="stat"><div class="stat-num">22</div><div class="stat-label">Categorías</div></div>
+  <div class="stat"><div class="stat-num">29</div><div class="stat-label">Escenas</div></div>
+  <div class="stat"><div class="stat-num">102</div><div class="stat-label">Motores synth</div></div>
+  <div class="stat"><div class="stat-num">214KB</div><div class="stat-label">Un solo HTML</div></div>
+</div>
+
+<section class="features" id="features">
+  <h2 class="section-title">Para narradores exigentes</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">🎚</div>
+      <div class="feature-title">Capas independientes</div>
+      <div class="feature-desc">Hasta 12 capas simultáneas. Cada una con volumen, ritmo y nivel de corrupción propio. Las capas se degradan hacia su equivalente perturbador.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧭</div>
+      <div class="feature-title">Eje emocional</div>
+      <div class="feature-desc">Plano 2D interactivo (calma↔tensión / placer↔terror). Arrastra un punto y Nocturne construye la mezcla automáticamente por intención narrativa.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🎬</div>
+      <div class="feature-title">Modo director</div>
+      <div class="feature-desc">Automatización temporal con arcos dramáticos: tensión creciente, desvanecimiento, oleaje o caos impredecible. La escena evoluciona sola.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💀</div>
+      <div class="feature-title">Lovecraft & ocultismo</div>
+      <div class="feature-desc">14 sonidos de la mitología lovecraftiana, 7 de sectas y rituales, frecuencias psicoacústicas reales (19 Hz, 111 Hz, 528 Hz, Schumann 7.83 Hz).</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔬</div>
+      <div class="feature-title">Síntesis procedural pura</div>
+      <div class="feature-desc">Cero archivos de audio. Todo se genera en tiempo real con Web Audio API. 102 motores de síntesis distintos: ruido filtrado, osciladores, binaurales, ilusiones de Risset y Shepard.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🧘</div>
+      <div class="feature-title">Frecuencias de placer</div>
+      <div class="feature-desc">Cuencos tibetanos en afinación justa, ondas binaurales alpha/theta/delta, Nada Brahma a 136.1 Hz, canto de ballenas, didgeridoo. El mismo rigor que el terror.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🌐</div>
+      <div class="feature-title">Compartir por URL</div>
+      <div class="feature-desc">La escena se codifica en el propio enlace. Sin servidor, sin base de datos. Un link = una mezcla completa lista para compartir con cualquiera.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📴</div>
+      <div class="feature-title">Funciona offline</div>
+      <div class="feature-desc">PWA instalable. Un único HTML de 214 KB. Sin dependencias, sin llamadas de red, sin seguimiento. Abre el archivo y funciona.</div>
+    </div>
+  </div>
+</section>
+
+<section class="philosophy">
+  <blockquote>"El sonido que no puedes nombrar es el que más miedo da."</blockquote>
+  <cite>— principio de diseño de Nocturne</cite>
+</section>
+
+<section class="categories">
+  <h2 class="section-title">22 categorías de ambientes</h2>
+  <div class="cats-grid">
+    <span class="cat-pill">🌧 Lluvia & agua</span>
+    <span class="cat-pill">🌬 Viento & aire</span>
+    <span class="cat-pill">🔥 Fuego & calor</span>
+    <span class="cat-pill">🌿 Bosque & naturaleza</span>
+    <span class="cat-pill">🏠 Interior & doméstico</span>
+    <span class="cat-pill">🏙 Urbano & social</span>
+    <span class="cat-pill">🎵 Música & atmósfera</span>
+    <span class="cat-pill">💀 Subterráneo & terror</span>
+    <span class="cat-pill">🌌 Espacial & onírico</span>
+    <span class="cat-pill">⚓ Mar & barcos</span>
+    <span class="cat-pill">🎬 Cine de terror</span>
+    <span class="cat-pill">😰 Tensión & suspense</span>
+    <span class="cat-pill">🥁 Percusión & golpes</span>
+    <span class="cat-pill">🩸 Horror visceral</span>
+    <span class="cat-pill">⚙ Industrial siniestro</span>
+    <span class="cat-pill">🔊 Synth de género</span>
+    <span class="cat-pill">🐙 Lovecraft & mitología</span>
+    <span class="cat-pill">🔬 Frecuencias especiales</span>
+    <span class="cat-pill">✨ Placer & bienestar</span>
+    <span class="cat-pill">🕯 Sectas & ocultismo</span>
+    <span class="cat-pill">🌑 Ambientes oscuros</span>
+    <span class="cat-pill">🧪 Síntesis experimental</span>
+  </div>
+</section>
+
+<section class="install">
+  <h2 class="section-title">Instalación</h2>
+  <p style="color:var(--text3);margin-bottom:8px">No requiere instalación. Descarga y abre.</p>
+  <div class="code-block">
+    <span style="color:var(--text3)"># Clona el repositorio</span><br>
+    git clone https://github.com/ivanroig/nocturne.git<br><br>
+    <span style="color:var(--text3)"># Sírvelo localmente (recomendado)</span><br>
+    cd nocturne && <span>python3 -m http.server 8000</span><br><br>
+    <span style="color:var(--text3)"># Abre http://localhost:8000/index.html</span>
+  </div>
+  <p style="font-size:11px;color:var(--text3)">Compatible con Chrome, Firefox, Safari y Edge modernos. <br>Para efectos binaurales completos, usa auriculares.</p>
+</section>
+
+<footer>
+  <span>Nocturne Studio · MIT License · Ivan Roig</span>
+  <div style="display:flex;gap:16px">
+    <a href="index.html">Abrir app</a>
+    <a href="https://github.com/ivanroig/nocturne">GitHub</a>
+  </div>
+</footer>
+
+</body>
+</html>
