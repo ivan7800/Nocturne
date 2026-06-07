@@ -551,14 +551,84 @@ body.cinema .cinema-exit { display: flex; }
 }
 
 /* ═══════════════════════════════════════════════
-   RESPONSIVE
+   RESPONSIVE — MOBILE FIRST
 ═══════════════════════════════════════════════ */
 @media (max-width: 860px) {
   :root { --right-w: 220px; }
 }
+
+/* ── MOBILE NAV BAR ── */
+.mobile-nav {
+  display: none;
+}
+
 @media (max-width: 680px) {
+  :root { --sidebar-w: 0px; --right-w: 0px; }
+
   .layout { grid-template-columns: 1fr; }
-  .sidebar-left, .sidebar-right { display: none; }
+  .sidebar-left, .sidebar-right { display: none !important; }
+
+  /* bottom nav bar */
+  .mobile-nav {
+    display: flex;
+    position: fixed; bottom: 0; left: 0; right: 0;
+    height: 54px; z-index: 100;
+    background: var(--bg2);
+    border-top: 1px solid var(--border);
+  }
+  .mobile-nav-btn {
+    flex: 1; display: flex; flex-direction: column; align-items: center;
+    justify-content: center; gap: 3px;
+    font-size: 9px; letter-spacing: .05em; text-transform: uppercase;
+    color: var(--text3); background: transparent; border: none;
+    cursor: pointer; transition: color .12s; font-family: var(--font-m);
+  }
+  .mobile-nav-btn.active { color: var(--accent); }
+  .mobile-nav-btn svg { width: 20px; height: 20px; }
+
+  /* mobile slide-up panels */
+  .mobile-panel {
+    position: fixed;
+    left: 0; right: 0;
+    bottom: 54px; top: var(--hdr-h);
+    background: var(--bg);
+    overflow-y: auto; z-index: 90;
+    transform: translateY(100%);
+    transition: transform .22s ease;
+    display: block;
+  }
+  .mobile-panel.open { transform: translateY(0); }
+
+  /* stage bottom padding to clear nav */
+  .stage { padding-bottom: 54px; }
+  .app { height: 100dvh; }
+
+  /* make sliders finger-friendly */
+  .sl input[type=range] { height: 5px; }
+  .sl input[type=range]::-webkit-slider-thumb { width: 18px; height: 18px; }
+  .sl input[type=range]::-moz-range-thumb { width: 18px; height: 18px; }
+  .lb { width: 34px; height: 34px; }
+  .lb svg { width: 14px; height: 14px; }
+
+  /* transport compact */
+  .transport { gap: 7px; padding: 6px 10px; flex-wrap: wrap; }
+  .master-group { min-width: 120px; }
+  .layer-count { display: none; }
+
+  /* header compact on mobile — hide text labels, keep icons */
+  .hdr-actions .btn .btn-label { display: none; }
+  .hdr-actions .btn { padding: 4px 7px; min-width: 28px; justify-content: center; }
+  .hdr-sep { display: none; }
+  .hdr-scene-name { font-size: 11px; }
+
+  /* layer cards slightly larger touch targets */
+  .play-btn { width: 40px; height: 40px; }
+
+  /* presets bar hidden on mobile (accessible via tabs) */
+  .presets-bar { display: none; }
+
+  /* modal mobile */
+  .modal { margin: 10px; padding: 20px 16px; }
 }
 </style>
 
@@ -858,6 +928,84 @@ body.cinema .cinema-exit { display: flex; }
 
 <div class="toast" id="toast"></div>
 
+<!-- ── MOBILE NAV ── -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Navegación móvil">
+  <button class="mobile-nav-btn" id="mnav-catalog" onclick="openMobilePanel('catalog')" aria-label="Catálogo">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    Catálogo
+  </button>
+  <button class="mobile-nav-btn active" id="mnav-layers" onclick="openMobilePanel('layers')" aria-label="Capas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    Capas
+  </button>
+  <button class="mobile-nav-btn" id="mnav-tools" onclick="openMobilePanel('tools')" aria-label="Herramientas">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+    Herramientas
+  </button>
+</nav>
+
+<!-- ── MOBILE PANEL: CATALOG ── -->
+<div class="mobile-panel" id="mpanel-catalog" role="dialog" aria-label="Catálogo de sonidos">
+  <div style="padding:8px;border-bottom:1px solid var(--border);background:var(--bg2);position:sticky;top:0;z-index:2">
+    <input type="text" placeholder="Buscar sonido…" id="search-input-mobile" oninput="filterCatalogMobile(this.value)"
+      style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-m);font-size:12px;padding:7px 10px;outline:none">
+  </div>
+  <div id="cat-filter-bar-mobile" style="padding:7px 8px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:4px;background:var(--bg2)"></div>
+  <div id="catalog-list-mobile" style="padding-bottom:8px"></div>
+</div>
+
+<!-- ── MOBILE PANEL: TOOLS ── -->
+<div class="mobile-panel" id="mpanel-tools" role="dialog" aria-label="Herramientas">
+  <div style="padding:0;height:100%;display:flex;flex-direction:column">
+    <!-- copy right sidebar content for mobile -->
+    <div class="tab-bar" style="flex-shrink:0">
+      <button class="tab-btn active" onclick="switchMobileTab('mezcla',this)">Mezcla</button>
+      <button class="tab-btn" onclick="switchMobileTab('director',this)">Director</button>
+      <button class="tab-btn" onclick="switchMobileTab('tools2',this)">Herramientas</button>
+    </div>
+    <div id="mtab-mezcla" class="tab-panel active" style="padding:12px">
+      <div class="panel-section" style="border:none;padding:0;margin-bottom:14px">
+        <div class="panel-title">Espacio &amp; filtros</div>
+        <div class="sl" style="margin-bottom:8px"><span class="sl-lbl" style="width:52px">Reverb</span><input type="range" min="0" max="100" value="0" id="reverb-slider-m" oninput="setReverb(this.value);syncSliderPair('reverb-slider','reverb-slider-m',this.value);document.getElementById('reverb-val').textContent=this.value"><span class="sl-val" id="reverb-val-m">0</span></div>
+        <div class="sl" style="margin-bottom:8px"><span class="sl-lbl" style="width:52px">Graves</span><input type="range" min="0" max="100" value="100" id="lp-slider-m" oninput="setLowpass(this.value);syncSliderPair('lp-slider','lp-slider-m',this.value);document.getElementById('lp-val').textContent=this.value"><span class="sl-val">—</span></div>
+        <div class="sl"><span class="sl-lbl" style="width:52px">Agudos</span><input type="range" min="0" max="100" value="0" id="hp-slider-m" oninput="setHighpass(this.value);syncSliderPair('hp-slider','hp-slider-m',this.value);document.getElementById('hp-val').textContent=this.value"><span class="sl-val">—</span></div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:12px">
+        <div class="panel-title">Eje emocional</div>
+        <div class="emo-axis-wrap"><canvas id="emo-canvas-m" class="emo-axis-canvas" aria-label="Eje emocional móvil"></canvas></div>
+        <div class="emo-axis-labels"><span class="emo-lbl">← calma</span><span class="emo-lbl">tensión →</span><span class="emo-lbl">↑ placer</span><span class="emo-lbl">terror ↓</span></div>
+        <button class="btn" onclick="applyEmotionalAxis()" style="width:100%;justify-content:center;margin-top:8px">Aplicar a mezcla</button>
+      </div>
+    </div>
+    <div id="mtab-director" class="tab-panel" style="padding:12px">
+      <div class="panel-title">Arco dramático</div>
+      <select id="director-arc-m" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-m);font-size:12px;padding:7px 8px;outline:none;margin-bottom:10px">
+        <option value="build">Tensión creciente</option><option value="fade">Desvanecimiento</option><option value="wave">Oleaje</option><option value="random">Caos impredecible</option>
+      </select>
+      <button class="btn" onclick="toggleDirector()" style="width:100%;justify-content:center;margin-bottom:8px">▶ Iniciar dirección</button>
+      <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:4px">
+        <div class="panel-title">Aleatorizador de sustos</div>
+        <button class="btn" onclick="toggleRandomizer()" style="width:100%;justify-content:center">▶ Activar</button>
+      </div>
+    </div>
+    <div id="mtab-tools2" class="tab-panel" style="padding:12px">
+      <div style="margin-bottom:12px">
+        <div class="panel-title">Temporizador de escritura</div>
+        <div class="timer-display" id="timer-display-m">25:00</div>
+        <div class="timer-controls"><button class="btn" onclick="setTimer(25)">25'</button><button class="btn" onclick="setTimer(45)">45'</button><button class="btn" onclick="setTimer(60)">60'</button><button class="btn active" onclick="toggleTimer()">▶</button></div>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:10px">
+        <div class="panel-title">Notas de escena</div>
+        <textarea class="notes-area" id="notes-area-m" placeholder="Apuntes, ideas…" rows="4" oninput="document.getElementById('notes-area').value=this.value" style="width:100%"></textarea>
+      </div>
+      <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px">
+        <div class="panel-title">Escenas guardadas <span id="saved-count-m" style="color:var(--text3)">(0)</span></div>
+        <div id="saved-list-m"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
 'use strict';
 // ─── AUDIO ENGINE ───────────────────────────────────────────────────────────
@@ -891,9 +1039,10 @@ function ensureAudio() {
   try {
     audioCtx = new AC();
 
-    // Master chain: [layers] -> masterGain -> hpMaster -> lpMaster -> {dry + reverb} -> analyser -> destination
+    // Master chain: [layers] -> masterGain -> hpMaster -> lpMaster -> {dry + reverb} -> compressor -> analyser -> destination
     masterGain = audioCtx.createGain();
-    masterGain.gain.value = 0.8;
+    const sliderVal = +document.getElementById('master-slider').value;
+    masterGain.gain.value = sliderVal / 100;
 
     hpMaster = audioCtx.createBiquadFilter();
     hpMaster.type = 'highpass';
@@ -910,6 +1059,14 @@ function ensureAudio() {
     reverbDry = audioCtx.createGain();
     reverbDry.gain.value = 1.0;
 
+    // Dynamics compressor to prevent clipping with many layers
+    const compressor = audioCtx.createDynamicsCompressor();
+    compressor.threshold.value = -18;
+    compressor.knee.value = 6;
+    compressor.ratio.value = 4;
+    compressor.attack.value = 0.003;
+    compressor.release.value = 0.25;
+
     analyser = audioCtx.createAnalyser();
     analyser.fftSize = 256;
 
@@ -918,8 +1075,9 @@ function ensureAudio() {
     lpMaster.connect(reverbDry);
     lpMaster.connect(reverbNode);
     reverbNode.connect(reverbWet);
-    reverbDry.connect(analyser);
-    reverbWet.connect(analyser);
+    reverbDry.connect(compressor);
+    reverbWet.connect(compressor);
+    compressor.connect(analyser);
     analyser.connect(audioCtx.destination);
   } catch (err) {
     showToast('Error al iniciar el audio: ' + err.message);
@@ -1094,18 +1252,20 @@ function synthRain(def, rate, out) {
   lp.type = 'lowpass';
   lp.frequency.value = def.lpFreq || 8000;
 
-  // LFO for intensity variation
+  // LFO for intensity variation — modulate a dedicated mix gain, not out.gain
+  const mixGain = audioCtx.createGain();
+  mixGain.gain.value = 1.0;
   const lfo = audioCtx.createOscillator();
   lfo.type = 'sine';
   lfo.frequency.value = 0.08 + (rate / 60) * 0.15;
   const lfoGain = audioCtx.createGain();
-  lfoGain.gain.value = 0.08;
+  lfoGain.gain.value = 0.06; // ±6% modulation, always positive
   lfo.connect(lfoGain);
-  lfoGain.connect(out.gain);
+  lfoGain.connect(mixGain.gain);
   lfo.start();
 
-  src.connect(hp); hp.connect(lp); lp.connect(out);
-  return { src, hp, lp, lfo, lfoGain };
+  src.connect(hp); hp.connect(lp); lp.connect(mixGain); mixGain.connect(out);
+  return { src, hp, lp, mixGain, lfo, lfoGain };
 }
 
 function synthWind(def, rate, out) {
@@ -1125,17 +1285,20 @@ function synthWind(def, rate, out) {
   lfoGain.connect(bp.frequency);
   lfo.start();
 
+  // Use a dedicated mix gain for amplitude modulation — do NOT modulate out.gain
+  const mixGain = audioCtx.createGain();
+  mixGain.gain.value = 1.0;
   const lfo2 = audioCtx.createOscillator();
   lfo2.type = 'sine';
   lfo2.frequency.value = 0.03;
   const lfo2Gain = audioCtx.createGain();
-  lfo2Gain.gain.value = 0.15;
+  lfo2Gain.gain.value = 0.12; // ±12%, always positive
   lfo2.connect(lfo2Gain);
-  lfo2Gain.connect(out.gain);
+  lfo2Gain.connect(mixGain.gain);
   lfo2.start();
 
-  src.connect(bp); bp.connect(out);
-  return { src, bp, lfo, lfoGain, lfo2, lfo2Gain };
+  src.connect(bp); bp.connect(mixGain); mixGain.connect(out);
+  return { src, bp, lfo, lfoGain, lfo2, lfo2Gain, mixGain };
 }
 
 function synthFire(def, rate, out) {
@@ -1197,15 +1360,20 @@ function synthDrone(def, rate, out) {
     o.start();
     return { o, g };
   });
-  // slow tremolo
+  // slow tremolo via dedicated mixGain
+  const mixGain = audioCtx.createGain();
+  mixGain.gain.value = 1.0;
   const lfo = audioCtx.createOscillator();
   lfo.frequency.value = 0.06;
   const lfoG = audioCtx.createGain();
   lfoG.gain.value = 0.04;
   lfo.connect(lfoG);
-  lfoG.connect(out.gain);
+  lfoG.connect(mixGain.gain);
   lfo.start();
-  return { oscs, lfo, lfoG };
+  // reconnect oscs through mixGain
+  oscs.forEach(({ g }) => { g.disconnect(out); g.connect(mixGain); });
+  mixGain.connect(out);
+  return { oscs, lfo, lfoG, mixGain };
 }
 
 function synthPad(def, rate, out) {
@@ -1438,16 +1606,18 @@ function synthWaves(def, rate, out) {
   const lp = audioCtx.createBiquadFilter();
   lp.type = 'lowpass';
   lp.frequency.value = 800;
+  const mixGain = audioCtx.createGain();
+  mixGain.gain.value = 1.0;
   const lfo = audioCtx.createOscillator();
   lfo.type = 'sine';
   lfo.frequency.value = 0.1 + (rate / 60) * 0.15;
   const lfoG = audioCtx.createGain();
-  lfoG.gain.value = 0.3;
+  lfoG.gain.value = 0.25; // kept positive range
   lfo.connect(lfoG);
-  lfoG.connect(out.gain);
+  lfoG.connect(mixGain.gain);
   lfo.start();
-  src.connect(lp); lp.connect(out);
-  return { src, lp, lfo, lfoG };
+  src.connect(lp); lp.connect(mixGain); mixGain.connect(out);
+  return { src, lp, mixGain, lfo, lfoG };
 }
 
 function synthThunder(def, rate, out) {
@@ -1522,14 +1692,18 @@ function synthDissonantPad(def, rate, out) {
     o.start();
     return { o, g, lp };
   });
+  const mixGainD = audioCtx.createGain();
+  mixGainD.gain.value = 1.0;
+  oscs.forEach(({ g }) => { g.disconnect(out); g.connect(mixGainD); });
+  mixGainD.connect(out);
   const lfo = audioCtx.createOscillator();
   lfo.type = 'sine';
   lfo.frequency.value = 0.05 + (rate / 60) * 0.15;
   const lfoG = audioCtx.createGain();
   lfoG.gain.value = 0.04;
-  lfo.connect(lfoG); lfoG.connect(out.gain);
+  lfo.connect(lfoG); lfoG.connect(mixGainD.gain);
   lfo.start();
-  return { oscs, lfo, lfoG };
+  return { oscs, lfo, lfoG, mixGainD };
 }
 
 // Caja de música desafinada (muy giallo / Argento)
@@ -1656,11 +1830,12 @@ function synthWhisperChoir(def, rate, out) {
   const ampLfo = audioCtx.createOscillator();
   ampLfo.frequency.value = 0.4;
   const ampG = audioCtx.createGain();
-  ampG.gain.value = 0.15;
-  ampLfo.connect(ampG); ampG.connect(out.gain);
+  ampG.gain.value = 0.13;
+  const mixGainWC = audioCtx.createGain(); mixGainWC.gain.value = 1.0;
+  src.connect(bp); bp.connect(mixGainWC); mixGainWC.connect(out);
+  ampLfo.connect(ampG); ampG.connect(mixGainWC.gain);
   ampLfo.start();
-  src.connect(bp); bp.connect(out);
-  return { src, lfo, lfoG, _stopFn: () => { try { ampLfo.stop(); } catch(e){} } };
+  return { src, lfo, lfoG, mixGainWC, _stopFn: () => { try { ampLfo.stop(); } catch(e){} } };
 }
 
 // ═══ TENSIÓN & SUSPENSE ═══
@@ -1722,9 +1897,12 @@ function synthTremoloStrings(def, rate, out) {
   trem.frequency.value = 8 + (rate / 60) * 14;
   const tremG = audioCtx.createGain();
   tremG.gain.value = 0.5;
-  trem.connect(tremG); tremG.connect(out.gain);
+  const mixGainTS = audioCtx.createGain(); mixGainTS.gain.value = 1.0;
+  oscs.forEach(({ g }) => { g.disconnect(out); g.connect(mixGainTS); });
+  mixGainTS.connect(out);
+  trem.connect(tremG); tremG.connect(mixGainTS.gain);
   trem.start();
-  return { oscs, _stopFn: () => { try { trem.stop(); } catch(e){} } };
+  return { oscs, mixGainTS, _stopFn: () => { try { trem.stop(); } catch(e){} } };
 }
 
 // Zumbido de alta frecuencia (tinnitus inquietante)
@@ -1763,9 +1941,13 @@ function synthSwell(def, rate, out) {
   lfo.frequency.value = 1 / period;
   const lfoG = audioCtx.createGain();
   lfoG.gain.value = 0.5;
-  lfo.connect(lfoG); lfoG.connect(out.gain);
+  const mixGainS = audioCtx.createGain();
+  mixGainS.gain.value = 1.0;
+  oscs.forEach(({ g }) => { g.disconnect(out); g.connect(mixGainS); });
+  mixGainS.connect(out);
+  lfo.connect(lfoG); lfoG.connect(mixGainS.gain);
   lfo.start();
-  return { oscs, _stopFn: () => { try { lfo.stop(); } catch(e){} } };
+  return { oscs, mixGainS, _stopFn: () => { try { lfo.stop(); } catch(e){} } };
 }
 
 // Cluster de metales disonante
@@ -2117,12 +2299,13 @@ function synthMachinery(def, rate, out) {
   clank.frequency.value = 2 + (rate / 60) * 4;
   const clankG = audioCtx.createGain();
   clankG.gain.value = 0.4;
-  clank.connect(clankG); clankG.connect(out.gain);
+  const mixGainMC = audioCtx.createGain(); mixGainMC.gain.value = 1.0; mixGainMC.connect(out);
+  clank.connect(clankG); clankG.connect(mixGainMC.gain);
   const g = audioCtx.createGain();
   g.gain.value = 0.12;
-  o.connect(lp); lp.connect(g); g.connect(out);
+  o.connect(lp); lp.connect(g); g.connect(mixGainMC);
   o.start(); clank.start();
-  return { osc: o, _stopFn: () => { try { clank.stop(); } catch(e){} } };
+  return { osc: o, mixGainMC, _stopFn: () => { try { clank.stop(); } catch(e){} } };
 }
 
 function synthChainDrag(def, rate, out) {
@@ -2282,8 +2465,10 @@ function synthCthulhuCall(def, rate, out) {
   const infra = audioCtx.createOscillator();
   infra.frequency.value = 19;
   const infraG = audioCtx.createGain(); infraG.gain.value = 0.08;
-  infra.connect(infraG); infraG.connect(out.gain); infra.start();
-  return { oscs, _stopFn: () => { try { infra.stop(); } catch(e){} } };
+  const mixGainCC = audioCtx.createGain(); mixGainCC.gain.value = 1.0; mixGainCC.connect(out);
+  oscs.forEach(({ g }) => { g.disconnect(out); g.connect(mixGainCC); });
+  infra.connect(infraG); infraG.connect(mixGainCC.gain); infra.start();
+  return { oscs, mixGainCC, _stopFn: () => { try { infra.stop(); } catch(e){} } };
 }
 
 function synthRlyehChoir(def, rate, out) {
@@ -2359,17 +2544,18 @@ function synthNyarlathotep(def, rate, out) {
 function synthInnsmouthDeep(def, rate, out) {
   const buf = makeNoiseBuffer('brown', 6); const src = loopNoise(buf);
   const lp = audioCtx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 300;
+  const mixGainID = audioCtx.createGain(); mixGainID.gain.value = 1.0; mixGainID.connect(out);
   const waveLfo = audioCtx.createOscillator(); waveLfo.frequency.value = 0.08;
-  const waveG = audioCtx.createGain(); waveG.gain.value = 0.4;
-  waveLfo.connect(waveG); waveG.connect(out.gain);
+  const waveG = audioCtx.createGain(); waveG.gain.value = 0.35;
+  waveLfo.connect(waveG); waveG.connect(mixGainID.gain);
   [55, 82, 110].forEach(f => {
     const o = audioCtx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f;
     const g = audioCtx.createGain(); g.gain.value = 0.04;
     const lp2 = audioCtx.createBiquadFilter(); lp2.type = 'lowpass'; lp2.frequency.value = 200;
-    o.connect(lp2); lp2.connect(g); g.connect(out); o.start();
+    o.connect(lp2); lp2.connect(g); g.connect(mixGainID); o.start();
   });
-  src.connect(lp); lp.connect(out); waveLfo.start();
-  return { src, lp, _stopFn: () => { try { waveLfo.stop(); } catch(e){} } };
+  src.connect(lp); lp.connect(mixGainID); waveLfo.start();
+  return { src, lp, mixGainID, _stopFn: () => { try { waveLfo.stop(); } catch(e){} } };
 }
 
 function synthAzathothFlutes(def, rate, out) {
@@ -2845,17 +3031,18 @@ function synthOmCorrupted(def, rate, out) {
 
 function synthBlackMass(def, rate, out) {
   const freqs = [65.4,87.3,109.9,138.6];
+  const mixGainBM = audioCtx.createGain(); mixGainBM.gain.value = 1.0; mixGainBM.connect(out);
   const oscs = freqs.map((f, i) => {
     const o = audioCtx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f;
     const lp = audioCtx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 300+i*80;
     const g = audioCtx.createGain(); g.gain.value = 0.06;
-    o.connect(lp); lp.connect(g); g.connect(out); o.start();
+    o.connect(lp); lp.connect(g); g.connect(mixGainBM); o.start();
     return { o, g, lp };
   });
   const lfo = audioCtx.createOscillator(); lfo.type = 'sine'; lfo.frequency.value = 0.03;
-  const lfoG = audioCtx.createGain(); lfoG.gain.value = 0.2;
-  lfo.connect(lfoG); lfoG.connect(out.gain); lfo.start();
-  return { oscs, _stopFn: () => { try { lfo.stop(); } catch(e){} } };
+  const lfoG = audioCtx.createGain(); lfoG.gain.value = 0.18;
+  lfo.connect(lfoG); lfoG.connect(mixGainBM.gain); lfo.start();
+  return { oscs, mixGainBM, _stopFn: () => { try { lfo.stop(); } catch(e){} } };
 }
 
 function synthDervishSpin(def, rate, out) {
@@ -3051,7 +3238,10 @@ function stopNodes(nodes) {
   if (nodes.lfo) { try { nodes.lfo.stop(); } catch(e){} }
   if (nodes.lfo2) { try { nodes.lfo2.stop(); } catch(e){} }
   if (nodes.oscs) nodes.oscs.forEach(({o, lfo}) => { try { o.stop(); lfo && lfo.stop(); } catch(e){} });
-  if (nodes.oscList) nodes.oscList.forEach(({o, lfo}) => { try { o.stop(); lfo.stop(); } catch(e){} });
+  if (nodes.oscList) nodes.oscList.forEach(({o, lfo}) => { try { o.stop(); lfo && lfo.stop(); } catch(e){} });
+  // Disconnect all mixGain intermediaries
+  const mixKeys = Object.keys(nodes).filter(k => k.startsWith('mixGain'));
+  mixKeys.forEach(k => { try { nodes[k].disconnect(); } catch(e){} });
   if (nodes.out) { try { nodes.out.disconnect(); } catch(e){} }
 }
 
@@ -3512,7 +3702,9 @@ const PRESETS = {
 
 // ─── STATE ────────────────────────────────────────────────────────────────
 let layers = [];
-let savedScenes = {};
+let savedScenes = (function() {
+  try { return JSON.parse(localStorage.getItem('nocturne-scenes') || '{}'); } catch(e) { return {}; }
+})();
 let timerMin = 25, timerSec = 0, timerRunning = false, timerInterval = null;
 let animFrame = null;
 let waveData = {};
@@ -3593,17 +3785,29 @@ function startLayerAudio(id) {
   if (audioNodes[id]) return;
   ensureAudio();
   const l = layers.find(x => x.id === id);
-  if (!l) return;
+  if (!l || !audioCtx) return;
   const nodes = createSoundNode(id, l.muted ? 0 : l.vol, l.rate);
   if (nodes) {
-    nodes.out.gain.value = l.muted ? 0 : l.vol / 100;
+    // Fade in to avoid clicks
+    const targetGain = l.muted ? 0 : l.vol / 100;
+    nodes.out.gain.setValueAtTime(0, audioCtx.currentTime);
+    nodes.out.gain.setTargetAtTime(targetGain, audioCtx.currentTime, 0.02);
     audioNodes[id] = nodes;
   }
 }
 
 function stopLayerAudio(id) {
   if (!audioNodes[id]) return;
-  stopNodes(audioNodes[id]);
+  const nodes = audioNodes[id];
+  // Fade out before stopping to avoid clicks
+  if (nodes.out && audioCtx) {
+    try {
+      nodes.out.gain.setTargetAtTime(0, audioCtx.currentTime, 0.015);
+      setTimeout(() => { stopNodes(nodes); }, 80);
+    } catch(e) { stopNodes(nodes); }
+  } else {
+    stopNodes(nodes);
+  }
   delete audioNodes[id];
 }
 
@@ -3696,30 +3900,17 @@ function toggleTimer() {
   timerRunning ? stopTimer() : startTimer();
 }
 
-function startTimer() {
-  timerRunning = true;
-  document.getElementById('timer-toggle').textContent = '⏸ Pausar';
-  document.getElementById('timer-display').classList.add('running');
-  timerInterval = setInterval(() => {
-    if (timerSec === 0) {
-      if (timerMin === 0) { stopTimer(); showToast('⏰ Tiempo de escritura completado'); return; }
-      timerMin--; timerSec = 59;
-    } else { timerSec--; }
-    renderTimer();
-  }, 1000);
-}
+// startTimer defined later with mobile sync and alarm
 
-function stopTimer() {
-  timerRunning = false;
-  clearInterval(timerInterval);
-  document.getElementById('timer-toggle').textContent = '▶ Iniciar';
-  document.getElementById('timer-display').classList.remove('running');
-}
+// stopTimer defined later with mobile sync
 
 function renderTimer() {
   const m = String(timerMin).padStart(2,'0');
   const s = String(timerSec).padStart(2,'0');
-  document.getElementById('timer-display').textContent = `${m}:${s}`;
+  const text = `${m}:${s}`;
+  document.getElementById('timer-display').textContent = text;
+  const mDisp = document.getElementById('timer-display-m');
+  if (mDisp) mDisp.textContent = text;
 }
 
 // ─── INTENSITY METER ─────────────────────────────────────────────────────
@@ -3896,6 +4087,10 @@ function drawEmoAxis() {
   ctx.arc(cx, cy, 2.5, 0, Math.PI*2);
   ctx.fillStyle = '#c8a96e';
   ctx.fill();
+
+  // Sync mobile canvas if open
+  const mCanvas = document.getElementById('emo-canvas-m');
+  if (mCanvas && mCanvas.width > 0) drawEmoAxisOnCanvas(mCanvas);
 }
 
 function applyEmotionalAxis() {
@@ -4618,16 +4813,7 @@ function buildPresetsBar() {
   });
 }
 
-function loadPreset(name) {
-  clearAll();
-  const p = PRESETS[name];
-  document.getElementById('scene-name').value = p.name;
-  p.ids.forEach(({ id, vol, rate }) => addLayer(id, vol, rate));
-  document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('on'));
-  const chip = document.getElementById('pc-' + name);
-  if (chip) chip.classList.add('on');
-  renderLayers(); syncSidebar();
-}
+// loadPreset defined later with confirmation guard
 
 // ─── SCENE MANAGEMENT ────────────────────────────────────────────────────────
 function saveScene() {
@@ -4642,6 +4828,7 @@ function saveScene() {
     hp: document.getElementById('hp-slider').value,
     savedAt: Date.now()
   };
+  try { localStorage.setItem('nocturne-scenes', JSON.stringify(savedScenes)); } catch(e) {}
   renderSavedScenes();
   updateCrossfadeTargets();
   saveHistory({ name, layerCount: layers.length });
@@ -4666,6 +4853,7 @@ function loadSavedScene(name) {
 
 function deleteSavedScene(name) {
   delete savedScenes[name];
+  try { localStorage.setItem('nocturne-scenes', JSON.stringify(savedScenes)); } catch(e) {}
   renderSavedScenes();
   updateCrossfadeTargets();
 }
@@ -4675,9 +4863,10 @@ function renderSavedScenes() {
   const empty = document.getElementById('saved-empty');
   const count = Object.keys(savedScenes).length;
   document.getElementById('saved-count').textContent = `(${count})`;
-  list.innerHTML = '';
-  if (!count) { empty.style.display = 'block'; return; }
-  empty.style.display = 'none';
+  if (list) list.innerHTML = '';
+  if (!count) { if (empty) empty.style.display = 'block'; return; }
+  if (empty) empty.style.display = 'none';
+  if (!list) return;
   Object.values(savedScenes).sort((a,b) => (b.savedAt||0)-(a.savedAt||0)).forEach(sc => {
     const item = document.createElement('div');
     item.className = 'saved-scene-item';
@@ -4689,6 +4878,8 @@ function renderSavedScenes() {
     `;
     list.appendChild(item);
   });
+  // also sync mobile
+  renderSavedScenesMobile();
 }
 
 // ─── HISTORY ─────────────────────────────────────────────────────────────────
@@ -4836,29 +5027,7 @@ function exportScene() {
   showToast('Escena exportada');
 }
 
-function importScene(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      clearAll();
-      document.getElementById('scene-name').value = data.name || '';
-      document.getElementById('notes-area').value = data.notes || '';
-      activeMoods = new Set(data.moods || []);
-      renderMoods();
-      const sliders = [['master-slider','master-val',data.master,setMaster],['reverb-slider','reverb-val',data.reverb,setReverb],['lp-slider','lp-val',data.lp,setLowpass],['hp-slider','hp-val',data.hp,setHighpass]];
-      sliders.forEach(([sid, vid, val, fn]) => { if (val != null) { document.getElementById(sid).value = val; document.getElementById(vid).textContent = val; fn(val); } });
-      (data.layers || []).forEach(l => { addLayer(l.id, l.vol, l.rate); if (l.corruption) { const layer = layers.find(x => x.id === l.id); if (layer) layer.corruption = l.corruption; } });
-      if (data.savedScenes) savedScenes = { ...savedScenes, ...data.savedScenes };
-      renderSavedScenes(); renderLayers(); syncSidebar(); updateIntensity(); updateCrossfadeTargets();
-      showToast('Escena importada correctamente');
-    } catch { showToast('Error al importar: JSON inválido'); }
-  };
-  reader.readAsText(file);
-  event.target.value = '';
-}
+// importScene defined later with proper catch(err)
 
 // ─── SYNC SIDEBAR ────────────────────────────────────────────────────────────
 function syncSidebar() {
@@ -4924,6 +5093,344 @@ function findSoundDef(id) {
   return null;
 }
 
+// ─── MOBILE PANELS ───────────────────────────────────────────────────────────
+
+let activeMobilePanel = 'layers'; // 'catalog' | 'layers' | 'tools'
+
+function openMobilePanel(name) {
+  // If clicking the active one, close panels and show stage
+  if (activeMobilePanel === name && name !== 'layers') {
+    closeMobilePanels();
+    return;
+  }
+  activeMobilePanel = name;
+
+  // Update nav buttons
+  document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+  const navBtn = document.getElementById('mnav-' + name);
+  if (navBtn) navBtn.classList.add('active');
+
+  // Close all panels
+  document.querySelectorAll('.mobile-panel').forEach(p => p.classList.remove('open'));
+
+  if (name === 'catalog') {
+    const panel = document.getElementById('mpanel-catalog');
+    if (panel) panel.classList.add('open');
+    buildCatalogMobile();
+  } else if (name === 'tools') {
+    const panel = document.getElementById('mpanel-tools');
+    if (panel) panel.classList.add('open');
+    // Init mobile emo axis when tools panel opens
+    setTimeout(initEmoAxisMobile, 60);
+    // Sync saved scenes list
+    renderSavedScenesMobile();
+  }
+  // 'layers' = default stage, no overlay panel
+}
+
+function closeMobilePanels() {
+  activeMobilePanel = 'layers';
+  document.querySelectorAll('.mobile-panel').forEach(p => p.classList.remove('open'));
+  document.querySelectorAll('.mobile-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mnav-layers').classList.add('active');
+}
+
+function switchMobileTab(id, btn) {
+  document.querySelectorAll('#mpanel-tools .tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#mpanel-tools .tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('mtab-' + id).classList.add('active');
+  btn.classList.add('active');
+  if (id === 'mezcla') setTimeout(initEmoAxisMobile, 60);
+}
+
+// ── Mobile Catalog (mirrors desktop catalog, same interaction) ──
+
+let activeCatFilterMobile = null;
+
+function buildCatalogMobile(filter = '') {
+  const list = document.getElementById('catalog-list-mobile');
+  if (!list) return;
+  list.innerHTML = '';
+  const q = filter.toLowerCase();
+
+  // Build filter bar if empty
+  const bar = document.getElementById('cat-filter-bar-mobile');
+  if (bar && !bar.children.length) {
+    const allChip = document.createElement('button');
+    allChip.className = 'cat-chip on'; allChip.textContent = 'Todo';
+    allChip.onclick = () => setCatFilterMobile(null);
+    bar.appendChild(allChip);
+    CATALOG.forEach(g => {
+      const chip = document.createElement('button');
+      chip.className = 'cat-chip';
+      chip.textContent = g.cat.split(' ')[0];
+      chip.title = g.cat;
+      chip.onclick = () => setCatFilterMobile(g.cat);
+      bar.appendChild(chip);
+    });
+  }
+
+  CATALOG.forEach(group => {
+    if (activeCatFilterMobile && group.cat !== activeCatFilterMobile) return;
+    const sounds = q
+      ? group.sounds.filter(s => s.name.toLowerCase().includes(q) || s.tag.toLowerCase().includes(q) || group.cat.toLowerCase().includes(q))
+      : group.sounds;
+    if (!sounds.length) return;
+
+    const sec = document.createElement('div');
+    sec.className = 'cat-section';
+    const activeInCat = sounds.filter(s => layers.some(l => l.id === s.id)).length;
+    sec.innerHTML = `<div class="cat-header" onclick="this.parentElement.classList.toggle('collapsed')">
+      <div class="cat-header-dot" style="background:${group.color}"></div>
+      <span class="cat-header-name" style="color:${group.color}aa">${group.cat}</span>
+      ${activeInCat ? `<span class="cat-count">${activeInCat}✓</span>` : ''}
+      <span class="cat-header-chevron">▾</span>
+    </div>
+    <div class="cat-sounds"></div>`;
+
+    const soundsDiv = sec.querySelector('.cat-sounds');
+    sounds.forEach(s => {
+      const active = layers.some(l => l.id === s.id);
+      const item = document.createElement('div');
+      item.className = 'sound-item' + (active ? ' active' : '');
+      item.dataset.id = s.id;
+      item.onclick = () => {
+        toggleSound(s.id);
+        // Close catalog panel, go back to layers view
+        closeMobilePanels();
+      };
+      item.innerHTML = `
+        <div class="s-dot" style="background:${active ? group.color : ''}"></div>
+        <span class="s-name">${s.name}</span>
+        <span class="s-tag">${s.tag}</span>
+      `;
+      soundsDiv.appendChild(item);
+    });
+    list.appendChild(sec);
+  });
+}
+
+function setCatFilterMobile(cat) {
+  activeCatFilterMobile = cat;
+  const bar = document.getElementById('cat-filter-bar-mobile');
+  if (bar) bar.querySelectorAll('.cat-chip').forEach(c => {
+    c.classList.toggle('on', cat ? c.title === cat : c.textContent === 'Todo');
+  });
+  buildCatalogMobile(document.getElementById('search-input-mobile')?.value || '');
+}
+
+function filterCatalogMobile(q) {
+  buildCatalogMobile(q);
+}
+
+// ── Sync saved scenes to mobile panel ──
+function renderSavedScenesMobile() {
+  const list = document.getElementById('saved-list-m');
+  const countEl = document.getElementById('saved-count-m');
+  if (!list) return;
+  const count = Object.keys(savedScenes).length;
+  if (countEl) countEl.textContent = `(${count})`;
+  list.innerHTML = '';
+  if (!count) { list.innerHTML = '<div style="font-size:11px;color:var(--text3);text-align:center;padding:6px 0">Ninguna guardada aún</div>'; return; }
+  Object.values(savedScenes).sort((a,b) => (b.savedAt||0)-(a.savedAt||0)).forEach(sc => {
+    const item = document.createElement('div');
+    item.className = 'saved-scene-item';
+    item.onclick = () => { loadSavedScene(sc.name); closeMobilePanels(); };
+    item.innerHTML = `
+      <span class="saved-scene-name">${sc.name}</span>
+      <span class="saved-scene-count">${sc.layers?.length || 0}</span>
+      <button class="lb" onclick="event.stopPropagation();deleteSavedScene('${sc.name}');renderSavedScenesMobile()" title="Borrar">${svgX()}</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+// ── Sync paired sliders (desktop <-> mobile) ──
+function syncSliderPair(desktopId, mobileId, val) {
+  const d = document.getElementById(desktopId);
+  const m = document.getElementById(mobileId);
+  if (d && d.value !== String(val)) d.value = val;
+  if (m && m.value !== String(val)) m.value = val;
+}
+
+// ── Mobile emotional axis ──
+let emoMobileDragging = false;
+function initEmoAxisMobile() {
+  const canvas = document.getElementById('emo-canvas-m');
+  if (!canvas) return;
+  const size = canvas.parentElement.offsetWidth;
+  if (size < 10) return;
+  canvas.width = size; canvas.height = size;
+  // Draw same state as desktop
+  drawEmoAxisOnCanvas(canvas);
+
+  canvas.addEventListener('mousedown', e => { emoMobileDragging = true; updateEmoFromEventM(canvas, e); });
+  canvas.addEventListener('mousemove', e => { if (emoMobileDragging) updateEmoFromEventM(canvas, e); });
+  canvas.addEventListener('mouseup', () => emoMobileDragging = false);
+  canvas.addEventListener('touchstart', e => { emoMobileDragging = true; updateEmoFromEventM(canvas, e.touches[0]); e.preventDefault(); }, {passive:false});
+  canvas.addEventListener('touchmove', e => { if (emoMobileDragging) updateEmoFromEventM(canvas, e.touches[0]); e.preventDefault(); }, {passive:false});
+  canvas.addEventListener('touchend', () => emoMobileDragging = false);
+}
+
+function updateEmoFromEventM(canvas, e) {
+  const r = canvas.getBoundingClientRect();
+  emoX = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
+  emoY = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+  drawEmoAxis();
+  drawEmoAxisOnCanvas(canvas);
+}
+
+function drawEmoAxisOnCanvas(canvas) {
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0, 0, W, H);
+  const grad = ctx.createRadialGradient(W*emoX, H*emoY, 0, W*emoX, H*emoY, Math.max(W,H)*0.8);
+  grad.addColorStop(0, emoY > 0.5 ? `rgba(80,10,10,${0.4 + emoX*0.3})` : `rgba(10,60,10,${0.3 + (1-emoY)*0.3})`);
+  grad.addColorStop(1, 'rgba(14,13,11,0.95)');
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(255,255,255,0.08)'; ctx.lineWidth = 0.5;
+  ctx.beginPath(); ctx.moveTo(W/2,0); ctx.lineTo(W/2,H); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(0,H/2); ctx.lineTo(W,H/2); ctx.stroke();
+  Object.entries(EMO_MAP).forEach(([id, [tx, ty]]) => {
+    const active = layers.some(l => l.id === id);
+    ctx.beginPath(); ctx.arc(tx*W, ty*H, active ? 4 : 2, 0, Math.PI*2);
+    ctx.fillStyle = active ? '#c8a96e' : 'rgba(255,255,255,0.15)'; ctx.fill();
+  });
+  const cx = emoX*W, cy = emoY*H;
+  ctx.beginPath(); ctx.arc(cx, cy, 8, 0, Math.PI*2);
+  ctx.strokeStyle = '#c8a96e'; ctx.lineWidth = 1.5; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy, 2.5, 0, Math.PI*2);
+  ctx.fillStyle = '#c8a96e'; ctx.fill();
+}
+
+// ─── RESIZE OBSERVER for emo canvas (Fix M4) ─────────────────────────────────
+(function() {
+  const wrap = document.getElementById('emo-canvas')?.parentElement;
+  if (wrap && window.ResizeObserver) {
+    new ResizeObserver(() => { initEmoAxis(); }).observe(wrap);
+  }
+})();
+
+// ─── TIMER ALARM (Fix M6) ────────────────────────────────────────────────────
+function timerAlarm() {
+  try {
+    if (!audioCtx) return;
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = 'sine';
+    o.frequency.value = 880;
+    g.gain.setValueAtTime(0.28, audioCtx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.4);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); o.stop(audioCtx.currentTime + 1.5);
+    // Second tone after 0.6s
+    setTimeout(() => {
+      if (!audioCtx) return;
+      const o2 = audioCtx.createOscillator();
+      const g2 = audioCtx.createGain();
+      o2.type = 'sine'; o2.frequency.value = 1100;
+      g2.gain.setValueAtTime(0.22, audioCtx.currentTime);
+      g2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1.0);
+      o2.connect(g2); g2.connect(audioCtx.destination);
+      o2.start(); o2.stop(audioCtx.currentTime + 1.1);
+    }, 600);
+  } catch(e) {}
+}
+
+// ─── FIX I7: PRESET LOAD CONFIRMATION ────────────────────────────────────────
+function startTimer() {
+  timerRunning = true;
+  document.getElementById('timer-toggle').textContent = '⏸ Pausar';
+  document.getElementById('timer-display').classList.add('running');
+  const mDisp = document.getElementById('timer-display-m');
+  if (mDisp) mDisp.classList.add('running');
+  timerInterval = setInterval(() => {
+    if (timerSec === 0) {
+      if (timerMin === 0) {
+        stopTimer();
+        showToast('⏰ Tiempo de escritura completado');
+        timerAlarm();
+        return;
+      }
+      timerMin--; timerSec = 59;
+    } else { timerSec--; }
+    renderTimer();
+    // sync mobile display handled in renderTimer
+  }, 1000);
+}
+
+function stopTimer() {
+  timerRunning = false;
+  clearInterval(timerInterval);
+  document.getElementById('timer-toggle').textContent = '▶ Iniciar';
+  document.getElementById('timer-display').classList.remove('running');
+  const mDisp = document.getElementById('timer-display-m');
+  if (mDisp) { mDisp.classList.remove('running'); mDisp.textContent = document.getElementById('timer-display').textContent; }
+}
+
+// ─── FIX I7: PRESET LOAD CONFIRMATION ────────────────────────────────────────
+function loadPreset(name) {
+  if (layers.length > 0) {
+    if (!confirm(`¿Reemplazar la escena actual con "${name}"?`)) return;
+  }
+  clearAll();
+  const p = PRESETS[name];
+  if (!p) return;
+  document.getElementById('scene-name').value = p.name;
+  p.ids.forEach(({ id, vol, rate }) => addLayer(id, vol, rate));
+  document.querySelectorAll('.preset-chip').forEach(c => c.classList.remove('on'));
+  const chip = document.getElementById('pc-' + name);
+  if (chip) chip.classList.add('on');
+  renderLayers(); syncSidebar();
+}
+
+// ─── FIX I6: catch(e) on importScene ────────────────────────────────────────
+function importScene(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+      clearAll();
+      document.getElementById('scene-name').value = data.name || '';
+      document.getElementById('notes-area').value = data.notes || '';
+      activeMoods = new Set(data.moods || []);
+      renderMoods();
+      const sliders = [
+        ['master-slider','master-val',data.master,setMaster],
+        ['reverb-slider','reverb-val',data.reverb,setReverb],
+        ['lp-slider','lp-val',data.lp,setLowpass],
+        ['hp-slider','hp-val',data.hp,setHighpass]
+      ];
+      sliders.forEach(([sid, vid, val, fn]) => {
+        if (val != null) {
+          document.getElementById(sid).value = val;
+          const vEl = document.getElementById(vid);
+          if (vEl) vEl.textContent = val;
+          fn(val);
+        }
+      });
+      (data.layers || []).forEach(l => {
+        addLayer(l.id, l.vol, l.rate);
+        if (l.corruption) { const layer = layers.find(x => x.id === l.id); if (layer) layer.corruption = l.corruption; }
+      });
+      if (data.savedScenes) {
+        savedScenes = { ...savedScenes, ...data.savedScenes };
+        try { localStorage.setItem('nocturne-scenes', JSON.stringify(savedScenes)); } catch(e2) {}
+      }
+      renderSavedScenes(); renderSavedScenesMobile();
+      renderLayers(); syncSidebar(); updateIntensity(); updateCrossfadeTargets();
+      showToast('Escena importada correctamente');
+    } catch(err) { showToast('Error al importar: JSON inválido'); }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// renderSavedScenes already syncs mobile inline
+
 // ─── INIT ────────────────────────────────────────────────────────────────────
 loadTheme();
 buildCatFilterBar();
@@ -4932,13 +5439,25 @@ buildPresetsBar();
 buildMoods();
 renderHistory();
 updateIntensity();
-if (!loadFromURL()) loadPreset('Tormenta');
+if (!loadFromURL()) {
+  // Don't trigger confirm on initial load — override loadPreset temporarily
+  const savedLayers = layers.length;
+  layers = []; // ensure empty so no confirm fires
+  loadPreset('Tormenta');
+}
 updateCrossfadeTargets();
+renderSavedScenes();
 setTimeout(() => { initEmoAxis(); checkOnboard(); }, 150);
+
+// Restore saved scenes panel counts
+document.getElementById('saved-count').textContent = `(${Object.keys(savedScenes).length})`;
 
 // Master slider webkit fix
 const ms = document.getElementById('master-slider');
 if (ms) ms.style.cssText += ';-webkit-appearance:none;cursor:pointer';
+
+// Mobile nav: set initial active state
+document.getElementById('mnav-layers')?.classList.add('active');
 
 // PWA
 if ('serviceWorker' in navigator) {
