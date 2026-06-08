@@ -1,96 +1,148 @@
 <div align="center">
 
-![MIT License](https://img.shields.io/badge/license-MIT-c8a96e?style=flat-square)
-![No dependencies](https://img.shields.io/badge/dependencies-0-5a9e6f?style=flat-square)
-![Single file](https://img.shields.io/badge/single%20file-214KB-534AB7?style=flat-square)
-![Sounds](https://img.shields.io/badge/sonidos-173-A32D2D?style=flat-square)
-![PWA](https://img.shields.io/badge/PWA-offline-185FA5?style=flat-square)
-
-</div>
-
-> **💡 Añade una captura de pantalla o GIF aquí** — graba 3-4 segundos mostrando el eje emocional o el modo cine y añádelo como `screenshot.gif` en el repositorio. Es lo que más stars genera.
-
-<div align="center">
-
-![MIT License](https://img.shields.io/badge/license-MIT-c8a96e?style=flat-square)
-![No dependencies](https://img.shields.io/badge/dependencies-0-5a9e6f?style=flat-square)
-![Single file](https://img.shields.io/badge/single%20file-214KB-534AB7?style=flat-square)
-![Sounds](https://img.shields.io/badge/sonidos-173-A32D2D?style=flat-square)
-![PWA](https://img.shields.io/badge/PWA-offline-185FA5?style=flat-square)
-
-</div>
-
-> **💡 Añade una captura de pantalla o GIF aquí** — graba 3-4 segundos mostrando el eje emocional o el modo cine y añádelo como `screenshot.gif` en el repositorio. Es lo que más stars genera.
-
 # Nocturne Studio
 
-**Arquitectura sonora para narradores**
+**Procedural sound architecture for writers, storytellers and worldbuilders**
 
-173 sonidos · 22 categorías · Síntesis procedural pura · Sin archivos de audio · Sin dependencias
+*173 sounds · 22 categories · 102 synthesis engines · Zero audio files · Zero dependencies*
 
-[**→ Abrir estudio**](https://ivanroig.github.io/nocturne/index.html) · [Landing](https://ivanroig.github.io/nocturne/landing.html)
+[![MIT License](https://img.shields.io/badge/license-MIT-c8a96e?style=flat-square)](LICENSE)
+[![No dependencies](https://img.shields.io/badge/dependencies-0-5a9e6f?style=flat-square)]()
+[![Single file](https://img.shields.io/badge/single%20file-214KB-534AB7?style=flat-square)]()
+[![Sounds](https://img.shields.io/badge/sounds-173-A32D2D?style=flat-square)]()
+[![PWA](https://img.shields.io/badge/PWA-offline%20ready-185FA5?style=flat-square)]()
+
+[**→ Open Studio**](https://ivanroig.github.io/nocturne/index.html) · [Landing page](https://ivanroig.github.io/nocturne/landing.html)
+
+---
+
+<!-- Add a screenshot or GIF here: drag and drop an image into this editor -->
+<!-- Recommended: record 4-5s showing the emotional axis moving + layers reacting -->
+<!-- Save as screenshot.png or demo.gif in the repo root -->
 
 </div>
 
 ---
 
-## Qué es
+## What is Nocturne?
 
-Nocturne no es un reproductor de ruido blanco. Es un **estudio de diseño de ambientes sonoros** donde construyes arquitecturas de capas independientes — cada una con volumen, ritmo y nivel de corrupción propios. Todo el audio se genera de forma **100% procedural** con Web Audio API. Sin archivos de sonido. Sin servidor. Un único HTML de 214 KB que funciona offline.
+Nocturne is **not** a white noise player.
 
-## Características
+It's a **sound atmosphere design studio** where you build independent layers — each with its own volume, rhythm, and *shadow* slider that gradually corrupts any sound toward its darker equivalent. Everything is generated in real time with the Web Audio API. No audio files. No server. No dependencies. A single 214 KB HTML file that works offline.
+
+**For horror writers:** layer Cthulhu's call over a corrupted thunderstorm while the Director mode slowly cranks up the tension.  
+**For thriller writers:** put a Carpenter synth pulse under rain on glass and a distant siren, then let the emotional axis drift toward terror.  
+**For fantasy writers:** dawn birds, forest wind, a distant accordion — and the corruption slider reveals what's wrong with this particular morning.
+
+---
+
+## Features
 
 | | |
 |---|---|
-| **173 sonidos** en 22 categorías | Del bosque al amanecer al llamado de Cthulhu |
-| **29 escenas** preconfiguradas | Tormenta, R'lyeh, Giallo, Meditación, Slasher… |
-| **102 motores** de síntesis | Ruido, osciladores, binaurales, Risset, Shepard |
-| **Eje emocional** interactivo | Calma↔Tensión / Placer↔Terror en un plano 2D |
-| **Slider de corrupción** por capa | Degrada cualquier sonido hacia su equivalente oscuro |
-| **Modo director** | Arcos dramáticos automáticos en el tiempo |
-| **Aleatorizador de sustos** | Eventos impredecibles en capas de tipo "evento" |
-| **Reverb maestra** procedural | Convolución + filtros de graves y agudos |
-| **Modo cine** | Pantalla completa con visualizador reactivo al espectro |
-| **Compartir por URL** | La escena entera codificada en el enlace |
-| **Crossfade entre escenas** | Transición suave con fade out/in configurable |
-| **Historial de sesiones** | Últimas 8 escenas guardadas en localStorage |
-| **Tema claro/oscuro** | Toggle con preferencia guardada |
-| **PWA instalable** | Funciona offline, sin conexión |
-| **214 KB · cero dependencias** | Un solo archivo HTML |
+| **173 sounds** in 22 categories | From forest dawn to the Call of Cthulhu |
+| **30 preset scenes** | Storm, R'lyeh, Giallo, Slasher, Meditation, Black Mass… |
+| **102 synthesis engines** | Noise, oscillators, binaural, Risset & Shepard illusions |
+| **Interactive emotional axis** | Calm↔Tension / Pleasure↔Terror on a 2D canvas |
+| **Shadow (corruption) slider** | Degrades any sound toward its dark equivalent |
+| **Narration mode** (Director) | Automatic dramatic arcs over time |
+| **Surprise events** | Randomizer fires event layers at unpredictable moments |
+| **Master convolution reverb** | Procedural reverb + global hi/lo filters |
+| **Immersion mode** | Full-screen with spectrum-reactive visualizer |
+| **Share by URL** | Entire scene encoded in the link, no server needed |
+| **Scene crossfade** | Smooth fade out/in between saved scenes |
+| **Writing session timer** | Pomodoro timer integrated with the scene |
+| **Library export/import** | Save your scene library as a portable JSON file |
+| **Light/dark theme** | Persisted preference |
+| **Installable PWA** | Works fully offline |
+| **214 KB · zero dependencies** | One HTML file, open and run |
 
-## Categorías de sonidos
+---
 
-**Ambientes naturales:** Lluvia & agua · Viento & aire · Fuego & calor · Bosque & naturaleza · Interior & doméstico · Urbano & social · Mar & barcos
+## Sound categories
 
-**Terror & cine:** Música & atmósfera · Subterráneo & terror · Cine de terror · Tensión & suspense · Percusión & golpes · Horror visceral · Industrial siniestro · Synth de género
+**Natural environments:** Rain & water · Wind & air · Fire & heat · Forest & nature · Interior & domestic · Urban & social · Sea & ships
 
-**Lo singular de Nocturne:**
-- **Lovecraft & mitología** — Cthulhu, R'lyeh, Azathoth, Shoggoth, Nyarlathotep, Dagon, Hastur, Yog-Sothoth, Mi-Go, el Dios Durmiente
-- **Frecuencias especiales** — 19 Hz (presencia), Binaurales alpha/theta/delta, Shepard, Schumann 7.83 Hz, 111 Hz megalítico, microtonalidad árabe
-- **Placer & bienestar** — 528 Hz, cuencos tibetanos en afinación justa, Nada Brahma 136.1 Hz, canto de ballenas, didgeridoo, ondas cerebrales
-- **Sectas & ocultismo** — Gregoriano oscuro, glosolalia, om corrompido, misa negra, derviche en giro, tambores en 5/4 y 7/8
-- **Ambientes oscuros** — Circo siniestro, submarino en el abismo, biblioteca prohibida, iglesia profanada, laboratorio del doctor, tren nocturno
-- **Síntesis experimental** — Retroalimentación controlada, silencio granular, espectro invertido
+**Horror & cinema:** Music & atmosphere · Underground & terror · Horror cinema · Tension & suspense · Percussion & hits · Visceral horror · Sinister industrial · Genre synth
 
-## Uso
+**What makes Nocturne unique:**
+
+- **Lovecraft & mythology** — Cthulhu, R'lyeh, Azathoth, Shoggoth, Nyarlathotep, Dagon, Hastur, Yog-Sothoth, Mi-Go, the Sleeping God
+- **Special frequencies** — 19 Hz presence effect, binaural alpha/theta/delta, Shepard tones, Schumann resonance 7.83 Hz, 111 Hz megalithic, Arabic microtonality
+- **Pleasure & wellness** — 528 Hz, Tibetan bowls in just intonation, Nada Brahma 136.1 Hz, whale song, didgeridoo, brainwave entrainment
+- **Cults & occultism** — Dark Gregorian in real Phrygian mode, glossolalia, corrupted om, black mass, whirling dervish, drums in 5/4 and 7/8
+- **Dark atmospheres** — Sinister circus, submarine abyss, forbidden library, desecrated church, the doctor's laboratory, night train
+- **Experimental synthesis** — Controlled feedback, granular silence, inverted spectrum
+
+---
+
+## Quick start
+
+**No installation required.** Download and open `index.html` in any modern browser.
 
 ```bash
 git clone https://github.com/ivanroig/nocturne.git
 cd nocturne
 python3 -m http.server 8000
-# Abre http://localhost:8000/landing.html
+# Open http://localhost:8000
 ```
 
-Para publicar en GitHub Pages: Settings → Pages → Branch: main → Save. Tu app estará en `https://TU-USUARIO.github.io/nocturne/`
+Or just open `index.html` directly — binaural effects require a local server or HTTPS, but everything else works from the filesystem.
 
-## Atajos de teclado
+**Deploy to GitHub Pages:** Settings → Pages → Branch: main → Save. Your instance will be live at `https://YOUR-USERNAME.github.io/nocturne/`
 
-`Espacio` reproducir/pausar · `C` modo cine · `D` director · `R` aleatorizador · `Esc` salir cine · `?` ayuda
+---
 
-## Tecnología
+## Keyboard shortcuts
 
-HTML + CSS + JavaScript vanilla · Web Audio API · Sin frameworks · Sin dependencias · PWA
+| Key | Action |
+|---|---|
+| `Space` | Play / pause |
+| `C` | Immersion mode (full-screen visualizer) |
+| `D` | Narration mode (Director) |
+| `R` | Surprise events (Randomizer) |
+| `Esc` | Exit immersion mode |
+| `?` | Show help |
 
-## Licencia
+---
 
-MIT · Ivan Roig · 2026
+## How it works technically
+
+Every sound in Nocturne is synthesized in real time using the [Web Audio API](https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API). There are **102 distinct synthesis engines**:
+
+- **Filtered noise** (brown, white) for rain, wind, crowds, fire
+- **Oscillator chains** with LFO modulation for drones, pads, tones
+- **Binaural beats** with stereo channel splitting for brainwave entrainment
+- **Shepard/Risset tones** for infinite ascending/descending illusions
+- **Event-based synthesis** with randomized timing for footsteps, drips, heartbeats
+- **Formant filters** for voice-like textures without any recorded audio
+- **Procedural convolution reverb** generated mathematically at runtime
+
+The entire audio graph is managed through a single `AudioContext` with a master gain, analyser, and reverb wet/dry bus. Each layer gets its own output `GainNode` so volume, mute and corruption can be adjusted independently without interrupting other layers.
+
+---
+
+## Adding new sounds
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for a step-by-step guide to adding synthesis engines, registering them in the catalog, assigning emotional axis coordinates, and connecting corruption pairs.
+
+---
+
+## Browser support
+
+Chrome, Firefox, Safari and Edge (modern versions). For full binaural effect, use headphones.
+
+---
+
+## License
+
+MIT · [Ivan Roig](https://github.com/ivanroig) · 2026
+
+---
+
+<div align="center">
+
+*"The sound you can't name is the one that frightens you most."*  
+— Nocturne design principle
+
+</div>

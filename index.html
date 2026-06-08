@@ -526,6 +526,82 @@ body.cinema .cinema-exit { display: flex; }
 .modal-never { font-size: 10px; color: var(--text3); cursor: pointer; background: none; border: none; font-family: var(--font-m); }
 .modal-never:hover { color: var(--text2); }
 
+/* ── CHAPTER MODE ── */
+.chapter-step {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--bg3); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 6px 8px;
+  font-size: 11px;
+}
+.chapter-step.active-step {
+  border-color: var(--accent2);
+  background: var(--accent-dim);
+}
+.chapter-step-num {
+  font-size: 9px; color: var(--text3); width: 12px;
+  flex-shrink: 0; text-align: center;
+}
+.chapter-step select {
+  flex: 1; background: transparent; border: none;
+  color: var(--text); font-family: var(--font-m);
+  font-size: 11px; outline: none; cursor: pointer;
+  min-width: 0;
+}
+.chapter-step select option { background: var(--bg2); }
+.chapter-step-dur {
+  width: 32px; background: var(--bg2);
+  border: 1px solid var(--border); border-radius: 3px;
+  color: var(--text2); font-family: var(--font-m);
+  font-size: 10px; padding: 2px 4px; text-align: center;
+  outline: none;
+}
+.chapter-step-unit {
+  font-size: 9px; color: var(--text3); flex-shrink: 0;
+}
+.chapter-step .lb {
+  width: 20px; height: 20px; flex-shrink: 0; padding: 0;
+  opacity: .5;
+}
+.chapter-step .lb:hover { opacity: 1; }
+
+/* ── ONBOARDING DEMO CARDS ── */
+.onboard-demo-opt {
+  cursor: pointer;
+  display: block;
+}
+.onboard-demo-inner {
+  display: flex; align-items: flex-start; gap: 11px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  transition: border-color .12s, background .12s;
+}
+.onboard-demo-opt:hover .onboard-demo-inner {
+  border-color: var(--border2);
+  background: var(--bg3);
+}
+.onboard-demo-opt input:checked ~ .onboard-demo-inner {
+  border-color: var(--accent2);
+  background: var(--accent-dim);
+}
+.onboard-demo-icon {
+  font-size: 20px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.onboard-demo-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+.onboard-demo-desc {
+  font-size: 10px;
+  color: var(--text3);
+  line-height: 1.6;
+}
+
 /* ═══════════════════════════════════════════════
    TOAST
 ═══════════════════════════════════════════════ */
@@ -533,10 +609,14 @@ body.cinema .cinema-exit { display: flex; }
   position: fixed; bottom: 18px; left: 50%;
   transform: translateX(-50%) translateY(8px);
   background: var(--bg3); border: 1px solid var(--border2);
-  border-radius: var(--radius); padding: 7px 14px;
+  border-radius: var(--radius); padding: 7px 16px;
   font-size: 11px; color: var(--text2);
   opacity: 0; transition: all .22s;
-  pointer-events: none; z-index: 400; white-space: nowrap;
+  pointer-events: none; z-index: 400;
+  max-width: min(480px, 90vw);
+  white-space: normal;
+  text-align: center;
+  line-height: 1.5;
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -555,6 +635,41 @@ body.cinema .cinema-exit { display: flex; }
 ═══════════════════════════════════════════════ */
 @media (max-width: 860px) {
   :root { --right-w: 220px; }
+}
+
+/* ── PREVIEW BUTTON ── */
+.s-preview {
+  width: 18px; height: 18px;
+  border: none; border-radius: 3px;
+  background: transparent;
+  color: var(--text3);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  transition: color .1s, background .1s;
+  font-size: 10px;
+  opacity: 0;
+  pointer-events: none;
+  font-family: var(--font-m);
+  padding: 0;
+}
+.sound-item:hover .s-preview {
+  opacity: 1;
+  pointer-events: auto;
+}
+.s-preview:hover {
+  color: var(--accent);
+  background: var(--accent-dim);
+}
+.s-preview.previewing {
+  color: var(--accent);
+  opacity: 1;
+  pointer-events: auto;
+  animation: previewPulse 1s infinite;
+}
+@keyframes previewPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
 }
 
 /* ── MOBILE NAV BAR ── */
@@ -582,9 +697,11 @@ body.cinema .cinema-exit { display: flex; }
     font-size: 9px; letter-spacing: .05em; text-transform: uppercase;
     color: var(--text3); background: transparent; border: none;
     cursor: pointer; transition: color .12s; font-family: var(--font-m);
+    min-height: 44px; /* iOS minimum touch target */
+    padding: 0 4px;
   }
   .mobile-nav-btn.active { color: var(--accent); }
-  .mobile-nav-btn svg { width: 20px; height: 20px; }
+  .mobile-nav-btn svg { width: 22px; height: 22px; }
 
   /* mobile slide-up panels */
   .mobile-panel {
@@ -603,12 +720,18 @@ body.cinema .cinema-exit { display: flex; }
   .stage { padding-bottom: 54px; }
   .app { height: 100dvh; }
 
-  /* make sliders finger-friendly */
-  .sl input[type=range] { height: 5px; }
-  .sl input[type=range]::-webkit-slider-thumb { width: 18px; height: 18px; }
-  .sl input[type=range]::-moz-range-thumb { width: 18px; height: 18px; }
-  .lb { width: 34px; height: 34px; }
-  .lb svg { width: 14px; height: 14px; }
+  /* make sliders finger-friendly — 44px touch target minimum */
+  .sl { padding: 6px 0; }
+  .sl input[type=range] { height: 6px; }
+  .sl input[type=range]::-webkit-slider-thumb {
+    width: 24px; height: 24px;
+    box-shadow: 0 0 0 8px transparent; /* extend touch area */
+  }
+  .sl input[type=range]::-moz-range-thumb { width: 24px; height: 24px; }
+  .sl-lbl { font-size: 10px; width: 32px; }
+  .sl-val { font-size: 10px; width: 22px; }
+  .lb { width: 38px; height: 38px; }
+  .lb svg { width: 15px; height: 15px; }
 
   /* transport compact */
   .transport { gap: 7px; padding: 6px 10px; flex-wrap: wrap; }
@@ -645,35 +768,48 @@ body.cinema .cinema-exit { display: flex; }
 
 <!-- ── ONBOARDING MODAL ── -->
 <div class="modal-overlay hidden" id="onboard-modal">
-  <div class="modal">
+  <div class="modal" style="max-width:480px">
     <div class="modal-title">Nocturne</div>
-    <div class="modal-sub">Arquitectura sonora para narradores · 173 sonidos · síntesis procedural</div>
-    <div class="onboard-steps">
-      <div class="onboard-step">
-        <div class="onboard-num">1</div>
-        <div class="onboard-text">
-          <strong>Elige sonidos del catálogo izquierdo</strong>
-          <span>22 categorías, desde lluvia hasta el llamado de Cthulhu. Hasta 12 capas simultáneas.</span>
+    <div class="modal-sub" style="margin-bottom:18px">Arquitectura sonora para narradores. 173 sonidos generados en tiempo real.<br>Sin archivos de audio. Sin servidor. Un solo archivo HTML.</div>
+
+    <div style="font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text3);margin-bottom:10px">Elige una atmósfera para empezar</div>
+
+    <div id="onboard-demo-picks" style="display:flex;flex-direction:column;gap:7px;margin-bottom:20px">
+      <label class="onboard-demo-opt" data-preset="Tormenta">
+        <input type="radio" name="demo" value="Tormenta" checked style="display:none">
+        <div class="onboard-demo-inner">
+          <div class="onboard-demo-icon">⛈</div>
+          <div>
+            <div class="onboard-demo-name">Noche de tormenta</div>
+            <div class="onboard-demo-desc">Lluvia intensa, chimenea, tormenta eléctrica. Para escenas de refugio o persecución bajo la lluvia.</div>
+          </div>
         </div>
-      </div>
-      <div class="onboard-step">
-        <div class="onboard-num">2</div>
-        <div class="onboard-text">
-          <strong>Ajusta volumen, ritmo y corrupción</strong>
-          <span>Cada capa tiene controles independientes. El slider de corrupción degrada cualquier sonido hacia su equivalente perturbador.</span>
+      </label>
+      <label class="onboard-demo-opt" data-preset="R'lyeh">
+        <input type="radio" name="demo" value="R'lyeh" style="display:none">
+        <div class="onboard-demo-inner">
+          <div class="onboard-demo-icon">🐙</div>
+          <div>
+            <div class="onboard-demo-name">R'lyeh despierta</div>
+            <div class="onboard-demo-desc">Llamada de Cthulhu, coros del abismo, respiración del dios durmiente. Para lo cósmico e inevitable.</div>
+          </div>
         </div>
-      </div>
-      <div class="onboard-step">
-        <div class="onboard-num">3</div>
-        <div class="onboard-text">
-          <strong>Pulsa ▶ o usa el Eje Emocional</strong>
-          <span>El eje construye la mezcla automáticamente según la intención narrativa. <span class="kbd">Espacio</span> reproduce, <span class="kbd">C</span> activa el modo cine.</span>
+      </label>
+      <label class="onboard-demo-opt" data-preset="Giallo">
+        <input type="radio" name="demo" value="Giallo" style="display:none">
+        <div class="onboard-demo-inner">
+          <div class="onboard-demo-icon">🎬</div>
+          <div>
+            <div class="onboard-demo-name">Pesadilla en rojo</div>
+            <div class="onboard-demo-desc">Clavecín Goblin, caja de música rota, coros de susurros. Para tensión y horror psicológico.</div>
+          </div>
         </div>
-      </div>
+      </label>
     </div>
+
     <div class="modal-footer">
       <button class="modal-never" onclick="dismissOnboard(true)">No volver a mostrar</button>
-      <button class="btn active" onclick="dismissOnboard(false)" style="padding:6px 18px">Empezar</button>
+      <button class="btn active" onclick="dismissOnboard(false)" style="padding:7px 20px;font-size:12px">Escuchar ahora →</button>
     </div>
   </div>
 </div>
@@ -688,11 +824,11 @@ body.cinema .cinema-exit { display: flex; }
     <div class="hdr-actions">
       <button class="btn" id="btn-random" onclick="randomizeScene()" title="Generar escena aleatoria">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6h3l2-3 3 6 2-3h2M2 10h3l2 3 3-6 2 3h2" opacity=".6"/></svg>
-        Aleatorizar
+        Sorprender
       </button>
-      <button class="btn" id="btn-cinema" onclick="toggleCinema()" title="Modo cine — C">
+      <button class="btn" id="btn-cinema" onclick="toggleCinema()" title="Modo inmersión — C">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 6V3h3M14 6V3h-3M2 10v3h3M14 10v3h-3"/></svg>
-        Cine
+        Inmersión
       </button>
       <button class="btn" id="btn-theme" onclick="toggleTheme()" title="Cambiar tema claro/oscuro">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.5 3.5l1.4 1.4M11.1 11.1l1.4 1.4M3.5 12.5l1.4-1.4M11.1 4.9l1.4-1.4"/></svg>
@@ -768,9 +904,9 @@ body.cinema .cinema-exit { display: flex; }
     <aside class="sidebar-right">
 
       <div class="tab-bar">
-        <button class="tab-btn active" onclick="switchTab('mezcla',this)">Mezcla</button>
-        <button class="tab-btn" onclick="switchTab('director',this)">Director</button>
-        <button class="tab-btn" onclick="switchTab('tools',this)">Herramientas</button>
+        <button class="tab-btn active" onclick="switchTab('mezcla',this)">Atmósfera</button>
+        <button class="tab-btn" onclick="switchTab('director',this)">Narración</button>
+        <button class="tab-btn" onclick="switchTab('tools',this)">Escritura</button>
       </div>
 
       <!-- TAB 1: MEZCLA -->
@@ -778,7 +914,7 @@ body.cinema .cinema-exit { display: flex; }
 
         <!-- FX masters -->
         <div class="panel-section">
-          <div class="panel-title">Espacio & filtros</div>
+          <div class="panel-title">Ambiente sonoro</div>
           <div class="sl" style="margin-bottom:7px">
             <span class="sl-lbl" style="width:52px">Reverb</span>
             <input type="range" min="0" max="100" value="0" step="1" id="reverb-slider" oninput="setReverb(this.value)">
@@ -833,8 +969,7 @@ body.cinema .cinema-exit { display: flex; }
 
         <!-- Arc automation -->
         <div class="panel-section director-section">
-          <div class="panel-title">Arco dramático</div>
-          <select id="director-arc">
+          <div class="panel-title">Evolución de la escena</div>
             <option value="build">Tensión creciente</option>
             <option value="fade">Desvanecimiento</option>
             <option value="wave">Oleaje (sube y baja)</option>
@@ -845,19 +980,19 @@ body.cinema .cinema-exit { display: flex; }
             <input type="range" min="1" max="20" value="5" step="1" id="director-dur" oninput="document.getElementById('director-dur-val').textContent=this.value+'m'">
             <span class="sl-val" id="director-dur-val" style="width:24px">5m</span>
           </div>
-          <button class="btn" id="director-toggle" onclick="toggleDirector()" style="width:100%;justify-content:center">▶ Iniciar</button>
+          <button class="btn" id="director-toggle" onclick="toggleDirector()" style="width:100%;justify-content:center">▶ Iniciar evolución</button>
         </div>
 
         <!-- Event randomizer -->
         <div class="panel-section">
-          <div class="panel-title">Aleatorizador de sustos</div>
-          <p style="font-size:10px;color:var(--text3);line-height:1.6;margin-bottom:8px">Dispara capas de tipo "evento" en momentos impredecibles.</p>
+          <div class="panel-title">Golpes de efecto</div>
+          <p style="font-size:10px;color:var(--text3);line-height:1.6;margin-bottom:8px">Dispara sonidos de evento en momentos impredecibles para mantener la tensión.</p>
           <button class="btn" id="randomizer-toggle" onclick="toggleRandomizer()" style="width:100%;justify-content:center">▶ Activar</button>
         </div>
 
         <!-- Crossfade -->
         <div class="panel-section">
-          <div class="panel-title">Crossfade de escena</div>
+          <div class="panel-title">Transición entre escenas</div>
           <p style="font-size:10px;color:var(--text3);line-height:1.6;margin-bottom:8px">Transición suave hacia otra escena guardada.</p>
           <select id="crossfade-target" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-m);font-size:11px;padding:5px 8px;outline:none;margin-bottom:7px">
             <option value="">— selecciona escena destino —</option>
@@ -870,6 +1005,38 @@ body.cinema .cinema-exit { display: flex; }
           <button class="btn" onclick="startCrossfade()" style="width:100%;justify-content:center">Transicionar</button>
         </div>
 
+        <!-- Modo Capítulo -->
+        <div class="panel-section">
+          <div class="panel-title">Modo Capítulo
+            <span style="font-size:9px;color:var(--text3);font-weight:normal;margin-left:6px">secuencia automática</span>
+          </div>
+          <p style="font-size:10px;color:var(--text3);line-height:1.6;margin-bottom:10px">Define un arco sonoro completo para tu capítulo. Nocturne ejecuta las escenas en orden y transiciona automáticamente entre ellas.</p>
+
+          <div id="chapter-steps" style="display:flex;flex-direction:column;gap:5px;margin-bottom:8px"></div>
+
+          <button class="btn" onclick="addChapterStep()" style="width:100%;justify-content:center;margin-bottom:8px">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 3v10M3 8h10"/></svg>
+            Añadir escena al capítulo
+          </button>
+
+          <div style="display:flex;gap:5px">
+            <button class="btn" id="chapter-play-btn" onclick="toggleChapter()" style="flex:1;justify-content:center">▶ Ejecutar capítulo</button>
+            <button class="btn" onclick="clearChapter()" style="padding:5px 8px" title="Limpiar capítulo">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+            </button>
+          </div>
+
+          <div id="chapter-progress" style="display:none;margin-top:8px">
+            <div style="font-size:10px;color:var(--text3);margin-bottom:4px">
+              Escena <span id="chapter-step-label">1</span> de <span id="chapter-total-label">1</span>:
+              <span id="chapter-scene-label" style="color:var(--accent)">—</span>
+            </div>
+            <div style="height:2px;background:var(--bg4);border-radius:1px;overflow:hidden">
+              <div id="chapter-progress-bar" style="height:100%;background:var(--accent2);width:0%;transition:width .5s linear"></div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- TAB 3: HERRAMIENTAS -->
@@ -877,7 +1044,7 @@ body.cinema .cinema-exit { display: flex; }
 
         <!-- Timer -->
         <div class="panel-section">
-          <div class="panel-title">Temporizador de escritura</div>
+          <div class="panel-title">Sesión de escritura</div>
           <div class="timer-display" id="timer-display">25:00</div>
           <div class="timer-controls">
             <button class="btn" onclick="setTimer(25)">25'</button>
@@ -898,6 +1065,17 @@ body.cinema .cinema-exit { display: flex; }
           <div class="panel-title">Escenas guardadas <span id="saved-count" style="color:var(--text3)">(0)</span></div>
           <div id="saved-list"></div>
           <div id="saved-empty" style="font-size:11px;color:var(--text3);text-align:center;padding:6px 0">Ninguna guardada aún</div>
+          <div style="display:flex;gap:5px;margin-top:8px">
+            <button class="btn" onclick="exportLibrary()" style="flex:1;justify-content:center" title="Exportar todas las escenas guardadas como archivo">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M5 7l3 3 3-3M3 12h10"/></svg>
+              Exportar
+            </button>
+            <button class="btn" onclick="document.getElementById('import-library-file').click()" style="flex:1;justify-content:center" title="Importar biblioteca desde archivo">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 10V2M5 5l3-3 3 3M3 12h10"/></svg>
+              Importar
+            </button>
+            <input type="file" id="import-library-file" accept=".json" style="display:none" onchange="importLibrary(event)">
+          </div>
         </div>
 
         <!-- History -->
@@ -912,10 +1090,10 @@ body.cinema .cinema-exit { display: flex; }
           <div class="panel-title">Atajos de teclado</div>
           <div style="display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-size:10px;color:var(--text3);align-items:center">
             <span class="kbd">Espacio</span><span>Reproducir / Pausar</span>
-            <span class="kbd">C</span><span>Modo cine</span>
+            <span class="kbd">C</span><span>Modo inmersión</span>
             <span class="kbd">D</span><span>Modo director</span>
             <span class="kbd">R</span><span>Aleatorizador</span>
-            <span class="kbd">Esc</span><span>Salir modo cine</span>
+            <span class="kbd">Esc</span><span>Salir inmersión</span>
             <span class="kbd">?</span><span>Mostrar ayuda</span>
           </div>
         </div>
@@ -978,19 +1156,19 @@ body.cinema .cinema-exit { display: flex; }
       </div>
     </div>
     <div id="mtab-director" class="tab-panel" style="padding:12px">
-      <div class="panel-title">Arco dramático</div>
+      <div class="panel-title">Evolución de la escena</div>
       <select id="director-arc-m" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);color:var(--text);font-family:var(--font-m);font-size:12px;padding:7px 8px;outline:none;margin-bottom:10px">
         <option value="build">Tensión creciente</option><option value="fade">Desvanecimiento</option><option value="wave">Oleaje</option><option value="random">Caos impredecible</option>
       </select>
-      <button class="btn" onclick="toggleDirector()" style="width:100%;justify-content:center;margin-bottom:8px">▶ Iniciar dirección</button>
+      <button class="btn" onclick="toggleDirector()" style="width:100%;justify-content:center;margin-bottom:8px">▶ Iniciar evolución</button>
       <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:4px">
-        <div class="panel-title">Aleatorizador de sustos</div>
+        <div class="panel-title">Golpes de efecto</div>
         <button class="btn" onclick="toggleRandomizer()" style="width:100%;justify-content:center">▶ Activar</button>
       </div>
     </div>
     <div id="mtab-tools2" class="tab-panel" style="padding:12px">
       <div style="margin-bottom:12px">
-        <div class="panel-title">Temporizador de escritura</div>
+        <div class="panel-title">Sesión de escritura</div>
         <div class="timer-display" id="timer-display-m">25:00</div>
         <div class="timer-controls"><button class="btn" onclick="setTimer(25)">25'</button><button class="btn" onclick="setTimer(45)">45'</button><button class="btn" onclick="setTimer(60)">60'</button><button class="btn active" onclick="toggleTimer()">▶</button></div>
       </div>
@@ -1001,6 +1179,16 @@ body.cinema .cinema-exit { display: flex; }
       <div style="border-top:1px solid var(--border);padding-top:10px;margin-top:10px">
         <div class="panel-title">Escenas guardadas <span id="saved-count-m" style="color:var(--text3)">(0)</span></div>
         <div id="saved-list-m"></div>
+        <div style="display:flex;gap:5px;margin-top:8px">
+          <button class="btn" onclick="exportLibrary()" style="flex:1;justify-content:center">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2v8M5 7l3 3 3-3M3 12h10"/></svg>
+            Exportar
+          </button>
+          <button class="btn" onclick="document.getElementById('import-library-file').click()" style="flex:1;justify-content:center">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 10V2M5 5l3-3 3 3M3 12h10"/></svg>
+            Importar
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -1085,6 +1273,90 @@ function ensureAudio() {
 }
 
 // Synthesis strategies per sound type
+// ─── PREVIEW AUDITIVO ────────────────────────────────────────────────────────
+
+let previewCtx = null;
+let previewNodes = null;
+let previewTimeout = null;
+let previewingId = null;
+
+function previewSound(id, btnEl, e) {
+  e.stopPropagation();
+
+  if (previewingId === id) {
+    stopPreview();
+    return;
+  }
+
+  stopPreview();
+
+  const def = SOUND_DEFS[id];
+  if (!def) return;
+
+  previewingId = id;
+  btnEl.classList.add('previewing');
+  btnEl.textContent = '■';
+
+  try {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    previewCtx = new AC();
+
+    const masterOut = previewCtx.createGain();
+    masterOut.gain.value = 0;
+    masterOut.connect(previewCtx.destination);
+    masterOut.gain.setTargetAtTime(0.8, previewCtx.currentTime, 0.15);
+
+    // Swap temporal de audioCtx para reutilizar createSoundNode
+    const savedCtx = audioCtx;
+    audioCtx = previewCtx;
+    const nodes = createSoundNode(id, 80, 30);
+    audioCtx = savedCtx;
+
+    if (nodes) {
+      try { nodes.out.disconnect(); } catch(ex) {}
+      nodes.out.connect(masterOut);
+      nodes.out.gain.value = 1;
+      previewNodes = nodes;
+    }
+
+    previewTimeout = setTimeout(() => {
+      if (masterOut && previewCtx) {
+        masterOut.gain.setTargetAtTime(0, previewCtx.currentTime, 0.25);
+      }
+      setTimeout(stopPreview, 700);
+    }, 2500);
+
+  } catch(err) {
+    stopPreview();
+  }
+}
+
+function stopPreview() {
+  clearTimeout(previewTimeout);
+  previewTimeout = null;
+
+  if (previewNodes) {
+    try { stopNodes(previewNodes); } catch(ex) {}
+    previewNodes = null;
+  }
+
+  if (previewCtx) {
+    try { previewCtx.close(); } catch(ex) {}
+    previewCtx = null;
+  }
+
+  if (previewingId) {
+    const btn = document.querySelector(`.s-preview[data-id="${previewingId}"]`);
+    if (btn) {
+      btn.classList.remove('previewing');
+      btn.textContent = '▶';
+    }
+    previewingId = null;
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+
 function createSoundNode(id, vol, rate) {
   const def = SOUND_DEFS[id];
   if (!def) return null;
@@ -2548,14 +2820,18 @@ function synthInnsmouthDeep(def, rate, out) {
   const waveLfo = audioCtx.createOscillator(); waveLfo.frequency.value = 0.08;
   const waveG = audioCtx.createGain(); waveG.gain.value = 0.35;
   waveLfo.connect(waveG); waveG.connect(mixGainID.gain);
-  [55, 82, 110].forEach(f => {
+  const toneOscs = [55, 82, 110].map(f => {
     const o = audioCtx.createOscillator(); o.type = 'sawtooth'; o.frequency.value = f;
     const g = audioCtx.createGain(); g.gain.value = 0.04;
     const lp2 = audioCtx.createBiquadFilter(); lp2.type = 'lowpass'; lp2.frequency.value = 200;
     o.connect(lp2); lp2.connect(g); g.connect(mixGainID); o.start();
+    return o;
   });
   src.connect(lp); lp.connect(mixGainID); waveLfo.start();
-  return { src, lp, mixGainID, _stopFn: () => { try { waveLfo.stop(); } catch(e){} } };
+  return { src, lp, mixGainID, _stopFn: () => {
+    try { waveLfo.stop(); } catch(e){}
+    toneOscs.forEach(o => { try { o.stop(); } catch(e){} });
+  }};
 }
 
 function synthAzathothFlutes(def, rate, out) {
@@ -2669,14 +2945,15 @@ function synthNonEuclideanEcho(def, rate, out) {
   const buf = makeNoiseBuffer('white', 2); const src = loopNoise(buf);
   const hp = audioCtx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 1500;
   const g = audioCtx.createGain(); g.gain.value = 0.06;
-  [0.137, 0.271, 0.414, 0.618].forEach(ratio => {
+  const lfos = [0.137, 0.271, 0.414, 0.618].map(ratio => {
     const lfo = audioCtx.createOscillator(); lfo.type = 'sine';
     lfo.frequency.value = ratio*(1+(rate/60)*0.5);
     const lfoG = audioCtx.createGain(); lfoG.gain.value = 200;
     lfo.connect(lfoG); lfoG.connect(hp.frequency); lfo.start();
+    return { lfo, lfoG };
   });
   src.connect(hp); hp.connect(g); g.connect(out);
-  return { src };
+  return { src, _stopFn: () => lfos.forEach(({ lfo }) => { try { lfo.stop(); } catch(e){} }) };
 }
 
 // ═══ PSICOACÚSTICA ═══
@@ -2779,6 +3056,7 @@ function synth111Hz(def, rate, out) {
 function synthFormantVoid(def, rate, out) {
   const formants = [700, 1220, 2600];
   const buf = makeNoiseBuffer('white', 3); const src = loopNoise(buf);
+  const lfos = [];
   formants.forEach((f, i) => {
     const bp = audioCtx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = 8+i*3;
     const g = audioCtx.createGain(); g.gain.value = 0.04/(i+1);
@@ -2786,8 +3064,9 @@ function synthFormantVoid(def, rate, out) {
     const lfoG = audioCtx.createGain(); lfoG.gain.value = f*0.1;
     lfo.connect(lfoG); lfoG.connect(bp.frequency);
     src.connect(bp); bp.connect(g); g.connect(out); lfo.start();
+    lfos.push(lfo);
   });
-  return { src };
+  return { src, _stopFn: () => lfos.forEach(lfo => { try { lfo.stop(); } catch(e){} }) };
 }
 
 // ═══ PLACER & BIENESTAR ═══
@@ -2806,13 +3085,15 @@ function synthPurr(def, rate, out) {
 function synth528Hz(def, rate, out) {
   const o = audioCtx.createOscillator(); o.type = 'sine'; o.frequency.value = 528;
   const g = audioCtx.createGain(); g.gain.value = 0.1;
+  const harmonics = [];
   [1056, 1584].forEach((f, i) => {
     const oh = audioCtx.createOscillator(); oh.type = 'sine'; oh.frequency.value = f;
     const gh = audioCtx.createGain(); gh.gain.value = 0.03/(i+1);
     oh.connect(gh); gh.connect(out); oh.start();
+    harmonics.push(oh);
   });
   o.connect(g); g.connect(out); o.start();
-  return { osc: o };
+  return { osc: o, _stopFn: () => harmonics.forEach(h => { try { h.stop(); } catch(e){} }) };
 }
 
 function synthAlphaWave(def, rate, out) {
@@ -2825,12 +3106,13 @@ function synthThetaWave(def, rate, out) {
 
 function synthPerfectFifth(def, rate, out) {
   const root = def.root || 110;
-  [root, root*1.5, root*2, root*3].forEach((f, i) => {
+  const oscs = [root, root*1.5, root*2, root*3].map((f, i) => {
     const o = audioCtx.createOscillator(); o.type = 'sine'; o.frequency.value = f;
     const g = audioCtx.createGain(); g.gain.value = 0.08/(i+1);
     o.connect(g); g.connect(out); o.start();
+    return o;
   });
-  return {};
+  return { _stopFn: () => oscs.forEach(o => { try { o.stop(); } catch(e){} }) };
 }
 
 function synthHarmonicSeries(def, rate, out) {
@@ -3007,6 +3289,7 @@ function synthDarkGregory(def, rate, out) {
 function synthGlossolalia(def, rate, out) {
   const buf = makeNoiseBuffer('white', 3); const src = loopNoise(buf);
   const g = audioCtx.createGain(); g.gain.value = 0.08;
+  const lfos = [];
   [700,1200,2500].forEach((f, i) => {
     const bp = audioCtx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = 8;
     const lfo = audioCtx.createOscillator(); lfo.type = i===0?'sine':'square';
@@ -3014,8 +3297,9 @@ function synthGlossolalia(def, rate, out) {
     const lfoG = audioCtx.createGain(); lfoG.gain.value = f*0.4;
     lfo.connect(lfoG); lfoG.connect(bp.frequency);
     src.connect(bp); bp.connect(g); g.connect(out); lfo.start();
+    lfos.push(lfo);
   });
-  return { src };
+  return { src, _stopFn: () => lfos.forEach(lfo => { try { lfo.stop(); } catch(e){} }) };
 }
 
 function synthOmCorrupted(def, rate, out) {
@@ -3218,6 +3502,7 @@ function synthGranularSilence(def, rate, out) {
 function synthSpectralInvert(def, rate, out) {
   const freqs = [3500,2800,2100,1400,700];
   const buf = makeNoiseBuffer('white', 3); const src = loopNoise(buf);
+  const lfos = [];
   freqs.forEach((f, i) => {
     const bp = audioCtx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = f; bp.Q.value = 6;
     const g = audioCtx.createGain(); g.gain.value = 0.03;
@@ -3225,8 +3510,9 @@ function synthSpectralInvert(def, rate, out) {
     const lfoG = audioCtx.createGain(); lfoG.gain.value = f*0.12;
     lfo.connect(lfoG); lfoG.connect(bp.frequency);
     src.connect(bp); bp.connect(g); g.connect(out); lfo.start();
+    lfos.push(lfo);
   });
-  return { src };
+  return { src, _stopFn: () => lfos.forEach(lfo => { try { lfo.stop(); } catch(e){} }) };
 }
 
 
@@ -3699,6 +3985,40 @@ const PRESETS = {
   'CircoInf':   { name:'Circo infernal',              ids:[{id:'circo-siniestro',vol:55,rate:30},{id:'risa-infantil',vol:35,rate:12},{id:'acordeon-distante',vol:28,rate:18},{id:'drone-suspiria',vol:32,rate:8},{id:'zumbido-moscas',vol:22,rate:25}] },
 };
 
+
+// ─── INTENCIÓN NARRATIVA DE ESCENAS ──────────────────────────────────────────
+const PRESET_INTENT = {
+  'Tormenta':     'Para escenas de refugio, persecución bajo la lluvia o confesiones junto al fuego.',
+  'Biblioteca':   'Estudio nocturno, investigación secreta, descubrimiento de un manuscrito antiguo.',
+  'Taberna':      'Encuentros en lugares oscuros, información que se compra con monedas o secretos.',
+  'Bosque':       'Amanecer antes de la batalla, huida al alba, un mundo que todavía no sabe lo que viene.',
+  'Alta Mar':     'Travesía sin retorno, el horizonte como única respuesta, la tormenta que no cesa.',
+  'Cripta':       'Lo que yace bajo la ciudad. Lo que lleva siglos esperando ser encontrado.',
+  'Ciudad':       'La calle como testigo mudo. Alguien te sigue. La lluvia borra las huellas.',
+  'Onírico':      'Entre el sueño y la vigilia. Donde las reglas del mundo no aplican todavía.',
+  'Desierto':     'Soledad absoluta. El silencio como personaje. La noche que dura demasiado.',
+  'Iglesia':      'Fe que vacila. Confesión imposible. Un dios que escucha pero no responde.',
+  'Barco Pirata': 'El mar como enemigo. La madera como único hogar. La tempestad como prueba.',
+  'Calabozo':     'Cautiverio. El tiempo que se deshace. La esperanza que llega por las rendijas.',
+  'Slasher':      'Alguien está en la casa. Los pasos se acercan. El teléfono no tiene señal.',
+  'Giallo':       'El asesino tiene guantes negros. La música avisa antes que los ojos.',
+  'Suspiria':     'La academia tiene un secreto. Las paredes recuerdan lo que los vivos callan.',
+  'Synth Noir':   'Ciudad de neón y lluvia. Un caso que no debiste aceptar. Ya es tarde.',
+  'Persecución':  'El corazón no para. Las calles se confunden. No mires atrás.',
+  'Posesión':     'La casa respira. Algo lleva tu nombre en la voz equivocada.',
+  'Carnicería':   'Lo que quedó después. El olor que no se va. El silencio que pesa demasiado.',
+  'Apertura':     'El tráiler antes de que todo empiece. La promesa de lo que está por venir.',
+  'Asilo':        'Los pasillos no llevan a ningún lado conocido. Alguien apuntó tu nombre en la pared.',
+  "R'lyeh":       'Ph\'nglui mglw\'nafh Cthulhu R\'lyeh wgah\'nagl fhtagn. Ha despertado.',
+  'Culto':        'El fuego en el bosque. Los que danzan no son del todo humanos ya.',
+  'Innsmouth':    'El pueblo que huele a mar podrido. Los ojos que no parpadean del todo.',
+  'Azathoth':     'En el centro del caos. Las flautas idiotas. El trono que no debería existir.',
+  'Meditacion':   'El cuerpo se asienta. La mente se abre. Lo que eras hace un momento ya no importa.',
+  'Bienestar':    'Calma sin esfuerzo. El ronroneo del universo. Todo está, por ahora, bien.',
+  'Nyarla':       'El Mensajero de los Dioses Exteriores. Toma muchas formas. Ya está aquí.',
+  'MisaNegra':    'La liturgia invertida. Lo que se invoca no siempre obedece.',
+  'CircoInf':     'La carpa que no estaba ayer. La música que no debería sonar así.',
+};
 
 // ─── STATE ────────────────────────────────────────────────────────────────
 let layers = [];
@@ -4214,7 +4534,7 @@ function startDirector() {
   directorStart = performance.now();
   directorBaseVols = {};
   layers.forEach(l => { directorBaseVols[l.id] = l.vol; });
-  document.getElementById('director-toggle').textContent = '■ Detener dirección';
+  document.getElementById('director-toggle').textContent = '■ Detener evolución';
   document.getElementById('director-toggle').classList.add('active');
   directorLoop();
 }
@@ -4222,7 +4542,7 @@ function startDirector() {
 function stopDirector() {
   directorActive = false;
   cancelAnimationFrame(directorRAF);
-  document.getElementById('director-toggle').textContent = '▶ Iniciar dirección';
+  document.getElementById('director-toggle').textContent = '▶ Iniciar evolución';
   document.getElementById('director-toggle').classList.remove('active');
   // restore base volumes
   layers.forEach(l => {
@@ -4460,6 +4780,39 @@ function showOnboard() {
 function dismissOnboard(never) {
   document.getElementById('onboard-modal').classList.add('hidden');
   if (never) localStorage.setItem('nocturne-onboard', '1');
+
+  // Cargar la escena demo seleccionada y arrancar audio
+  const selected = document.querySelector('#onboard-demo-picks input[name="demo"]:checked');
+  const presetName = selected ? selected.value : 'Tormenta';
+
+  // Limpiar escena actual si está vacía o es la de inicio
+  if (layers.length === 0 || (layers.length > 0 && !playing)) {
+    layers = [];
+    const p = PRESETS[presetName];
+    if (p) {
+      document.getElementById('scene-name').value = p.name;
+      p.ids.forEach(({ id, vol, rate }) => addLayer(id, vol, rate));
+      renderLayers();
+      syncSidebar();
+      updateIntensity();
+    }
+  }
+
+  // Iniciar audio con fade in suave
+  if (!playing) {
+    initAudio();
+    // Silenciar master temporalmente y hacer fade in
+    if (masterGain) {
+      masterGain.gain.setValueAtTime(0, audioCtx.currentTime);
+      masterGain.gain.linearRampToValueAtTime(
+        document.getElementById('master-slider').value / 100,
+        audioCtx.currentTime + 1.5
+      );
+    }
+    togglePlay();
+  }
+
+  showToast('🎧 Usa auriculares para la experiencia completa');
 }
 function checkOnboard() {
   if (!localStorage.getItem('nocturne-onboard')) showOnboard();
@@ -4707,8 +5060,11 @@ function buildCatalog(filter = '') {
         <div class="s-dot" style="background:${active ? group.color : ''}"></div>
         <span class="s-name">${s.name}</span>
         <span class="s-tag">${s.tag}</span>
+        <button class="s-preview" data-id="${s.id}" title="Previsualizar 3s">▶</button>
         ${tooltip ? `<span class="s-tooltip">${tooltip}</span>` : ''}
       `;
+      const prevBtn = item.querySelector('.s-preview');
+      prevBtn.addEventListener('click', (e) => previewSound(s.id, prevBtn, e));
       soundsDiv.appendChild(item);
     });
     list.appendChild(sec);
@@ -4731,7 +5087,7 @@ function renderLayers() {
   if (!layers.length) {
     area.innerHTML = `<div class="empty-stage">
       <div class="big-char">♭</div>
-      <p>Selecciona sonidos del catálogo izquierdo para construir tu arquitectura sonora.</p>
+      <p>Elige sonidos del catálogo para construir la atmósfera de tu escena. Empieza con uno — ya verás adónde lleva.</p>
     </div>`;
     document.getElementById('layer-count').textContent = '0 capas';
     updateIntensity(); drawEmoAxis();
@@ -4756,7 +5112,7 @@ function renderLayers() {
       </div>
       <div class="layer-sliders">
         <div class="sl">
-          <span class="sl-lbl">Vol</span>
+          <span class="sl-lbl">Nivel</span>
           <input type="range" min="0" max="100" value="${l.vol}" step="1"
             style="accent-color:${l.color}"
             oninput="updateLayer('${l.id}','vol',+this.value);document.getElementById('vlv-${l.id}').textContent=this.value">
@@ -4770,7 +5126,7 @@ function renderLayers() {
           <span class="sl-val" id="rte-${l.id}">${l.rate}</span>
         </div>
         <div class="sl corrupt">
-          <span class="sl-lbl">Corrup</span>
+          <span class="sl-lbl">Sombra</span>
           <input type="range" min="0" max="100" value="${corruptVal}" step="1"
             oninput="setCorruption('${l.id}',+this.value);document.getElementById('crp-${l.id}').textContent=this.value;document.getElementById('lc-${l.id}').classList.toggle('corrupted',+this.value>20)">
           <span class="sl-val" id="crp-${l.id}" style="color:${corruptVal>20?'var(--danger)':'var(--text3)'}">${corruptVal}</span>
@@ -4809,6 +5165,8 @@ function buildPresetsBar() {
     btn.className = 'preset-chip'; btn.id = 'pc-' + name;
     btn.textContent = name;
     btn.onclick = () => loadPreset(name);
+    const intent = PRESET_INTENT[name];
+    if (intent) btn.title = intent;
     bar.appendChild(btn);
   });
 }
@@ -5029,7 +5387,279 @@ function exportScene() {
 
 // importScene defined later with proper catch(err)
 
-// ─── SYNC SIDEBAR ────────────────────────────────────────────────────────────
+// ─── BIBLIOTECA: EXPORT / IMPORT ─────────────────────────────────────────────
+
+function exportLibrary() {
+  const count = Object.keys(savedScenes).length;
+  if (!count) { showToast('No hay escenas guardadas que exportar'); return; }
+
+  const data = {
+    _nocturne: true,
+    _type: 'library',
+    _version: '1.0',
+    _exportedAt: new Date().toISOString(),
+    _count: count,
+    scenes: savedScenes
+  };
+
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const dateStr = new Date().toISOString().slice(0,10);
+  a.download = `nocturne-biblioteca-${dateStr}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast(`${count} escena${count !== 1 ? 's' : ''} exportada${count !== 1 ? 's' : ''}`);
+}
+
+function importLibrary(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const data = JSON.parse(e.target.result);
+
+      // Detectar si es biblioteca o escena individual
+      let incoming = {};
+      if (data._nocturne && data._type === 'library' && data.scenes) {
+        incoming = data.scenes;
+      } else if (data.name && data.layers) {
+        // Es una escena individual — importarla como entrada única
+        incoming[data.name] = {
+          name: data.name,
+          layers: data.layers || [],
+          notes: data.notes || '',
+          moods: data.moods || [],
+          reverb: data.reverb,
+          lp: data.lp,
+          hp: data.hp,
+          savedAt: data.savedAt || Date.now()
+        };
+      } else if (typeof data === 'object' && !Array.isArray(data)) {
+        // Puede ser un objeto de escenas sin wrapper
+        const firstVal = Object.values(data)[0];
+        if (firstVal && firstVal.layers) incoming = data;
+      }
+
+      const importCount = Object.keys(incoming).length;
+      if (!importCount) { showToast('Archivo no reconocido'); return; }
+
+      // Fusionar: las escenas importadas NO sobreescriben las existentes con el mismo nombre
+      // salvo que sean más recientes
+      let added = 0, updated = 0;
+      Object.entries(incoming).forEach(([key, scene]) => {
+        if (!savedScenes[key]) {
+          savedScenes[key] = scene;
+          added++;
+        } else if ((scene.savedAt || 0) > (savedScenes[key].savedAt || 0)) {
+          savedScenes[key] = scene;
+          updated++;
+        }
+      });
+
+      try { localStorage.setItem('nocturne-scenes', JSON.stringify(savedScenes)); } catch(e2) {}
+      renderSavedScenes();
+      updateCrossfadeTargets();
+
+      const msg = added && updated ? `+${added} nuevas, ${updated} actualizadas`
+                : added ? `${added} escena${added !== 1 ? 's' : ''} importada${added !== 1 ? 's' : ''}`
+                : updated ? `${updated} escena${updated !== 1 ? 's' : ''} actualizada${updated !== 1 ? 's' : ''}`
+                : 'Ya tenías todas estas escenas';
+      showToast(msg);
+    } catch(err) {
+      showToast('Error al leer el archivo');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// ─── MODO CAPÍTULO ────────────────────────────────────────────────────────────
+
+let chapterSteps = [];       // [{sceneName, duration}]  duration en minutos
+let chapterActive = false;
+let chapterStepIndex = 0;
+let chapterStepTimer = null;
+let chapterProgressTimer = null;
+let chapterStepStart = 0;
+
+function addChapterStep() {
+  const sceneNames = Object.keys(savedScenes);
+  if (!sceneNames.length) {
+    showToast('Guarda al menos una escena primero');
+    return;
+  }
+  chapterSteps.push({ sceneName: sceneNames[0], duration: 10 });
+  renderChapterSteps();
+}
+
+function removeChapterStep(idx) {
+  chapterSteps.splice(idx, 1);
+  renderChapterSteps();
+}
+
+function clearChapter() {
+  stopChapter();
+  chapterSteps = [];
+  renderChapterSteps();
+}
+
+function renderChapterSteps() {
+  const container = document.getElementById('chapter-steps');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const sceneNames = Object.keys(savedScenes);
+
+  if (!chapterSteps.length) {
+    container.innerHTML = `<div style="font-size:10px;color:var(--text3);text-align:center;padding:8px 0">
+      Añade escenas para construir el arco de tu capítulo
+    </div>`;
+    return;
+  }
+
+  chapterSteps.forEach((step, i) => {
+    const div = document.createElement('div');
+    div.className = 'chapter-step' + (chapterActive && i === chapterStepIndex ? ' active-step' : '');
+    div.id = 'cs-' + i;
+
+    // Scene selector
+    const opts = sceneNames.map(n =>
+      `<option value="${n}" ${n === step.sceneName ? 'selected' : ''}>${n}</option>`
+    ).join('');
+
+    div.innerHTML = `
+      <span class="chapter-step-num">${i + 1}</span>
+      <select onchange="chapterSteps[${i}].sceneName=this.value">${opts}</select>
+      <input class="chapter-step-dur" type="number" min="1" max="180" value="${step.duration}"
+        onchange="chapterSteps[${i}].duration=Math.max(1,+this.value);this.value=chapterSteps[${i}].duration">
+      <span class="chapter-step-unit">min</span>
+      <button class="lb" onclick="removeChapterStep(${i})" title="Eliminar paso">${svgX()}</button>
+    `;
+    container.appendChild(div);
+  });
+
+  // Total duration
+  const total = chapterSteps.reduce((s, x) => s + x.duration, 0);
+  const totalEl = document.createElement('div');
+  totalEl.style.cssText = 'font-size:9px;color:var(--text3);text-align:right;padding-top:2px';
+  totalEl.textContent = `Total: ${total} min`;
+  container.appendChild(totalEl);
+}
+
+function toggleChapter() {
+  chapterActive ? stopChapter() : startChapter();
+}
+
+function startChapter() {
+  if (!chapterSteps.length) { showToast('Añade escenas al capítulo primero'); return; }
+
+  // Validate all scenes exist
+  const missing = chapterSteps.find(s => !savedScenes[s.sceneName]);
+  if (missing) { showToast(`Escena "${missing.sceneName}" no encontrada`); return; }
+
+  if (!playing) togglePlay();
+
+  chapterActive = true;
+  chapterStepIndex = 0;
+  document.getElementById('chapter-play-btn').textContent = '■ Detener capítulo';
+  document.getElementById('chapter-play-btn').classList.add('active');
+  document.getElementById('chapter-progress').style.display = 'block';
+  document.getElementById('chapter-total-label').textContent = chapterSteps.length;
+
+  executeChapterStep(0);
+}
+
+function executeChapterStep(idx) {
+  if (!chapterActive || idx >= chapterSteps.length) {
+    stopChapter();
+    showToast('Capítulo completado', 4000);
+    return;
+  }
+
+  chapterStepIndex = idx;
+  const step = chapterSteps[idx];
+  const durationMs = step.duration * 60 * 1000;
+
+  // Update UI
+  renderChapterSteps();
+  document.getElementById('chapter-step-label').textContent = idx + 1;
+  document.getElementById('chapter-scene-label').textContent = step.sceneName;
+  document.getElementById('chapter-progress-bar').style.width = '0%';
+
+  // Load scene
+  loadSavedScene(step.sceneName);
+  showToast(`Capítulo · Escena ${idx + 1}/${chapterSteps.length}: ${step.sceneName}`, 3500);
+
+  // Progress bar animation
+  chapterStepStart = performance.now();
+  clearInterval(chapterProgressTimer);
+  chapterProgressTimer = setInterval(() => {
+    if (!chapterActive) { clearInterval(chapterProgressTimer); return; }
+    const elapsed = performance.now() - chapterStepStart;
+    const pct = Math.min(100, (elapsed / durationMs) * 100);
+    const bar = document.getElementById('chapter-progress-bar');
+    if (bar) bar.style.width = pct + '%';
+  }, 500);
+
+  // Schedule next step
+  clearTimeout(chapterStepTimer);
+
+  // Crossfade 8s before end if there's a next step
+  const crossfadeDur = Math.min(8000, durationMs * 0.15);
+  const nextStepDelay = durationMs - crossfadeDur;
+
+  if (idx + 1 < chapterSteps.length) {
+    chapterStepTimer = setTimeout(() => {
+      if (!chapterActive) return;
+      // Fade out current scene
+      const startVols = {};
+      layers.forEach(l => startVols[l.id] = l.vol);
+      const t0 = performance.now();
+
+      function fadeOut() {
+        if (!chapterActive) return;
+        const p = Math.min(1, (performance.now() - t0) / crossfadeDur);
+        layers.forEach(l => {
+          const v = Math.round(startVols[l.id] * (1 - p));
+          l.vol = v;
+          if (audioNodes[l.id] && !l.muted) audioNodes[l.id].out.gain.value = v / 100;
+        });
+        if (p < 1) requestAnimationFrame(fadeOut);
+        else executeChapterStep(idx + 1);
+      }
+      requestAnimationFrame(fadeOut);
+    }, nextStepDelay);
+  } else {
+    // Last step — just wait full duration then stop
+    chapterStepTimer = setTimeout(() => {
+      stopChapter();
+      showToast('Capítulo completado', 4000);
+    }, durationMs);
+  }
+}
+
+function stopChapter() {
+  chapterActive = false;
+  clearTimeout(chapterStepTimer);
+  clearInterval(chapterProgressTimer);
+  chapterStepIndex = 0;
+
+  const btn = document.getElementById('chapter-play-btn');
+  if (btn) { btn.textContent = '▶ Ejecutar capítulo'; btn.classList.remove('active'); }
+  const progress = document.getElementById('chapter-progress');
+  if (progress) progress.style.display = 'none';
+
+  renderChapterSteps();
+}
+
+// Hook into updateCrossfadeTargets to also refresh chapter selects
+const _origUpdateCF = updateCrossfadeTargets;
+function updateCrossfadeTargets() {
+  _origUpdateCF();
+  renderChapterSteps();
+}
 function syncSidebar() {
   const activeIds = new Set(layers.map(l => l.id));
   document.querySelectorAll('.sound-item').forEach(item => {
@@ -5082,10 +5712,12 @@ function renderMoods() {
 }
 
 // ─── TOAST & UTILS ───────────────────────────────────────────────────────────
-function showToast(msg) {
+function showToast(msg, duration) {
   const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2600);
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => t.classList.remove('show'), duration || 2600);
 }
 
 function findSoundDef(id) {
@@ -5203,7 +5835,12 @@ function buildCatalogMobile(filter = '') {
         <div class="s-dot" style="background:${active ? group.color : ''}"></div>
         <span class="s-name">${s.name}</span>
         <span class="s-tag">${s.tag}</span>
+        <button class="s-preview" data-id="${s.id}" title="Previsualizar 3s">▶</button>
       `;
+      const prevBtn = item.querySelector('.s-preview');
+      prevBtn.style.opacity = '1';
+      prevBtn.style.pointerEvents = 'auto';
+      prevBtn.addEventListener('click', (e) => previewSound(s.id, prevBtn, e));
       soundsDiv.appendChild(item);
     });
     list.appendChild(sec);
@@ -5383,6 +6020,8 @@ function loadPreset(name) {
   const chip = document.getElementById('pc-' + name);
   if (chip) chip.classList.add('on');
   renderLayers(); syncSidebar();
+  const intent = PRESET_INTENT[name];
+  if (intent) showToast(intent, 4000);
 }
 
 // ─── FIX I6: catch(e) on importScene ────────────────────────────────────────
@@ -5448,6 +6087,14 @@ if (!loadFromURL()) {
 updateCrossfadeTargets();
 renderSavedScenes();
 setTimeout(() => { initEmoAxis(); checkOnboard(); }, 150);
+
+// Demo card click selection
+document.querySelectorAll('.onboard-demo-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const radio = opt.querySelector('input[type="radio"]');
+    if (radio) radio.checked = true;
+  });
+});
 
 // Restore saved scenes panel counts
 document.getElementById('saved-count').textContent = `(${Object.keys(savedScenes).length})`;
