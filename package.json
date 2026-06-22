@@ -1,8 +1,8 @@
 {
   "name": "nocturne-studio",
-  "version": "4.8.0",
+  "version": "4.9.0",
   "private": true,
-  "description": "Hybrid procedural sound studio with cinematic visual skins, audio mastering and touch-first phone/tablet navigation, safe public links and final QA for writers and storytellers.",
+  "description": "Hybrid procedural sound studio with cinematic visual skins, audio mastering, touch-first phone/tablet navigation, safe public links and corrected GitHub Pages publishing guidance.",
   "type": "module",
   "scripts": {
     "test": "node --check assets/js/app.js && node --check sw.js && node tests/static-check.mjs"

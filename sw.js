@@ -1,4 +1,4 @@
-const CACHE = 'nocturne-v4.8-linkfix-mobile-qa';
+const CACHE = 'nocturne-v4.9-publication-final';
 const ASSETS = [
   './',
   './index.html',

@@ -95,13 +95,19 @@ assert(read('assets/css/app.css').includes('[data-skin="rlyeh"]'), 'Rlyeh skin c
 assert(app.includes('MASTER_PROFILES') && app.includes('applyMasterProfile') && index.includes('master-profile-grid'), 'master profile engine and UI must exist');
 assert(app.includes('createLayerPolishChain') && app.includes('inferSoundPolish'), 'per-layer audio polish engine must exist');
 assert(app.includes('previewAudioActive') && app.includes('isAudioEngineActive') && app.includes('shouldKeepScheduling'), 'event preview active-state fix must exist');
-assert(sw.includes('nocturne-v4.8-linkfix-mobile-qa'), 'service worker cache must use v4.8 linkfix/mobile QA cache name');
+assert(sw.includes('nocturne-v4.9-publication-final'), 'service worker cache must use v4.9 publication final cache name');
 assert(!index.includes('https://github.com/ivanroig/nocturne'), 'runtime app must not expose a GitHub link that can 404 while the repo is private/missing');
 assert(!landing.includes('https://github.com/ivanroig/nocturne'), 'landing page must not expose a GitHub link that can 404 while the repo is private/missing');
+assert(!read('README.md').includes('https://ivanroig.github.io/nocturne'), 'README must not hard-code a possibly stale GitHub Pages URL');
 for (const file of ['index.html','landing.html','README.md','CONTRIBUTING.md']) {
   assert(!read(file).includes('https://github.com/ivanroig/nocturne'), `${file} must not hard-code a 404-prone repository URL`);
 }
 assert(index.includes('landing.html#install'), 'header guide button must point to internal publication guide');
 assert(landing.includes('id="install"') && landing.includes('Guía de publicación'), 'landing publication guide must exist');
+
+assert(!landing.toLowerCase().includes('sube la carpeta completa'), 'landing must not tell users to upload the container folder');
+assert(!read('README.md').toLowerCase().includes('sube la carpeta completa'), 'README must not tell users to upload the container folder');
+assert(landing.includes('raíz del repositorio') || landing.includes('/root'), 'landing must clearly mention repository root deployment');
+assert(read('README.md').includes('repository root') || read('README.md').includes('/root'), 'README must clearly mention repository root deployment');
 
 console.log('STATIC_CHECKS_PASS');

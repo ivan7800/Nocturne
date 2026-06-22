@@ -1,5 +1,13 @@
 # Changelog
 
+## v4.9.0 — Publication Final QA
+
+- Corrected landing deployment copy: upload the internal files to the repository root, not the container folder.
+- Updated README deployment instructions to prevent GitHub Pages from serving an old root `index.html`.
+- Updated visible landing version to v4.9.
+- Updated service worker cache to `nocturne-v4.9-publication-final` so browsers refresh this final build.
+- Added static checks to block misleading “upload the whole folder” wording.
+
 ## v4.8.0 — Safe Links & Final Mobile QA
 
 - Removed visible public GitHub buttons that could send users to a 404 when the repository is private, renamed or not yet published.

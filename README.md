@@ -1,6 +1,6 @@
 <div align="center">
 
-# Nocturne Studio v4.8
+# Nocturne Studio v4.9
 
 **Procedural sound architecture for writers, storytellers and worldbuilders**
 
@@ -12,9 +12,9 @@
 [![Sounds](https://img.shields.io/badge/sounds-173-A32D2D?style=flat-square)]()
 [![PWA](https://img.shields.io/badge/PWA-offline%20ready-185FA5?style=flat-square)]()
 
-[**→ Open Studio**](https://ivanroig.github.io/nocturne/index.html) · [Landing page](https://ivanroig.github.io/nocturne/landing.html)
+[**→ Open Studio**](index.html) · [Landing page](landing.html)
 
-> Nota de publicación: la app ya no muestra un botón externo de GitHub en la interfaz pública. Si el repositorio todavía es privado, está mal nombrado o no existe, GitHub devuelve 404 a los visitantes. La navegación visible usa enlaces internos seguros hasta que publiques el repo.
+> Nota de publicación: la app ya no muestra un botón externo de GitHub en la interfaz pública. Sube el **contenido interno del ZIP** a la raíz del repositorio, no la carpeta contenedora, para evitar que GitHub Pages publique una versión vieja.
 
 ---
 
@@ -106,7 +106,7 @@ python3 -m http.server 8000
 
 For installable PWA/offline cache behavior, use HTTPS or a local server.
 
-**Deploy to GitHub Pages:** Settings → Pages → Branch: main → Save. Your instance will be live at `https://YOUR-USERNAME.github.io/YOUR-REPO/`.
+**Deploy to GitHub Pages:** unzip the package, open the generated folder, upload its internal files to the repository root, then go to Settings → Pages → Branch: main → `/root` → Save. Your instance will be live at `https://YOUR-USERNAME.github.io/YOUR-REPO/`.
 
 ---
 
