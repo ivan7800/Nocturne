@@ -1,0 +1,19 @@
+{
+  "name": "nocturne-studio",
+  "version": "4.8.0",
+  "private": true,
+  "description": "Hybrid procedural sound studio with cinematic visual skins, audio mastering and touch-first phone/tablet navigation, safe public links and final QA for writers and storytellers.",
+  "type": "module",
+  "scripts": {
+    "test": "node --check assets/js/app.js && node --check sw.js && node tests/static-check.mjs"
+  },
+  "keywords": [
+    "web-audio",
+    "procedural-audio",
+    "writing",
+    "soundscape",
+    "pwa",
+    "github-pages"
+  ],
+  "license": "MIT"
+}

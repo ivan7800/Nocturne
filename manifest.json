@@ -1,0 +1,24 @@
+{
+  "name": "Nocturne — Arquitectura Sonora",
+  "short_name": "Nocturne",
+  "description": "Estudio offline de ambientes sonoros con skins, masterización y navegación táctil móvil/tablet.",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0e0d0b",
+  "theme_color": "#0e0d0b",
+  "lang": "es",
+  "categories": [
+    "entertainment",
+    "productivity",
+    "lifestyle"
+  ],
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
